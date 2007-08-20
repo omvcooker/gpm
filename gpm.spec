@@ -39,8 +39,8 @@ Patch8:		gpm-1.20.1-basename.patch
 Patch9:		gpm-1.20.1-consolename.patch
 Patch10:	gpm-1.20.1-deps.patch
 
-Requires(post): /sbin/chkconfig, info-install, rpm-helper
-Requires(preun): /sbin/chkconfig, info-install, rpm-helper
+Requires(post): chkconfig, info-install, rpm-helper
+Requires(preun): chkconfig, info-install, rpm-helper
 
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 

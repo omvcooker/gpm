@@ -1,5 +1,5 @@
 %define version	1.20.1
-%define release %mkrel 16
+%define release %mkrel 17
 %define url 	ftp://arcana.linux.it/pub/gpm/
 
 # Allow first build without ncurses support

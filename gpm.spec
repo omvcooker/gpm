@@ -46,6 +46,7 @@ BuildRequires:	byacc
 BuildRequires:	ncurses-devel
 %endif
 BuildRequires:	texinfo autoconf2.1
+BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 %description
 Gpm provides mouse support to text-based Linux applications like the

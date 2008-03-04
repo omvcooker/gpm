@@ -10,7 +10,7 @@
 Summary:	A mouse server for the Linux console
 Name:		gpm
 Version:	1.20.1
-Release:	%mkrel 19
+Release:	%mkrel 20
 License:	GPL
 Group:		System/Servers
 URL:		ftp://arcana.linux.it/pub/gpm/

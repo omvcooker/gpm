@@ -39,6 +39,7 @@ Patch27:	gpm-1.20.1-openmax.patch
 # mdv patches
 Patch50:	gpm-1.20.0-nodebug.patch
 Patch51:	gpm-1.20.0-docfix.patch
+Patch52:	gpm-1.20.1-do_not_build_it_twice.diff
 Requires(post): chkconfig, info-install, rpm-helper
 Requires(preun): chkconfig, info-install, rpm-helper
 BuildRequires:	byacc
@@ -116,6 +117,7 @@ done
 # mdv patches
 %patch50 -p1 -b .nodebug
 %patch51 -p1 -b .docfix
+%patch52 -p1 -b .do_not_build_it_twice
 
 # handle patch1 mods
 autoconf

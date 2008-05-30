@@ -3,7 +3,7 @@
 
 # this defines the library version that this package builds.
 %define LIBMAJ 2
-%define LIBVER %{LIBMAJ}.19.0
+%define LIBVER %{LIBMAJ}.0.0
 %define libname %mklibname %{name} %LIBMAJ
 %define develname %mklibname %{name} -d
 
@@ -11,7 +11,7 @@ Summary:	A mouse server for the Linux console
 Name:		gpm
 Version:	1.20.4
 Release:	%mkrel 1
-License:	GPL
+License:	GPLv2+
 Group:		System/Servers
 URL:		ftp://arcana.linux.it/pub/gpm/
 Source0:	http://ftp.linux.it/pub/People/rubini/gpm/%{name}-%{version}.tar.lzma

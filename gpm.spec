@@ -9,33 +9,21 @@
 
 Summary:	A mouse server for the Linux console
 Name:		gpm
-Version:	1.20.1
-Release:	%mkrel 22
+Version:	1.20.4
+Release:	%mkrel 1
 License:	GPL
 Group:		System/Servers
 URL:		ftp://arcana.linux.it/pub/gpm/
-Source0:	http://ftp.linux.it/pub/People/rubini/gpm/%{name}-%{version}.tar.gz
+Source0:	http://ftp.linux.it/pub/People/rubini/gpm/%{name}-%{version}.tar.lzma
 Source1:	gpm.init
 Source2:	inputattach.c
 # fedora patches (gpm-1.20.1-89.fc8.src.rpm)
-Patch1:		gpm-evdev-cumulative.patch
-Patch2:		gpm-1.20.1-math.patch
-Patch3:		gpm-1.20.1-weak-wgetch.patch
-Patch4:		gpm-1.20.1-nodebug.patch
-Patch5:		gpm-1.20.1-gpmopen.patch
-Patch6:		gpm-1.20.1-idie.patch
-Patch16:	gpm-1.20.1-subscript.patch
-Patch17:	gpm-1.20.1-input.patch
-Patch18:	gpm-1.20.1-consolename.patch
-Patch19:	gpm-1.20.1-multilib.patch
-Patch20:	gpm-1.20.1-no-console-error.patch
-Patch21:	gpm-1.20.1-lib-silent.patch
-Patch22:	gpm-1.20.1-close-fds.patch
-Patch23:	gpm-1.20.1-aligned-sleep.patch
-Patch24:	gpm-1.20.1-deadsocket.patch
-Patch25:	gpm-1.20.1-default-handler.patch
-Patch26:	gpm-1.20.1-va_list.patch
-Patch27:	gpm-1.20.1-openmax.patch
+Patch1: gpm-1.20.1-multilib.patch
+Patch2: gpm-1.20.1-lib-silent.patch
+Patch3: gpm-1.20.3-gcc4.3.patch
+Patch4: gpm-1.20.3-close-fds.patch
+Patch5: gpm-1.20.1-doc.patch
+Patch6: gpm-1.20.1-weak-wgetch.patch
 # mdv patches
 Patch50:	gpm-1.20.0-nodebug.patch
 Patch51:	gpm-1.20.0-docfix.patch
@@ -46,7 +34,8 @@ BuildRequires:	byacc
 %if %{build_curses}
 BuildRequires:	ncurses-devel
 %endif
-BuildRequires:	texinfo autoconf2.1
+#BuildRequires:	texinfo autoconf2.1
+BuildRequires:	autoconf
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 %description
@@ -95,24 +84,12 @@ for i in `find . -type d -name CVS` `find . -type f -name .cvs\*` `find . -type 
 done
     
 # fedora patches
-%patch1 -p1 -b .evdev
-%patch2 -p1 -b .math
-%patch3 -p1 -b .weak-wgetch
-%patch4 -p1 -b .nodebug
-%patch5 -p1 -b .gpmopen
-%patch6 -p1 -b .idie
-%patch16 -p1 -b .subscript
-%patch17 -p1 -b .input
-%patch18 -p1 -b .consolename
-%patch19 -p1 -b .multilib
-%patch20 -p1 -b .no-console-error
-%patch21 -p1 -b .lib-silent
-%patch22 -p1 -b .close-fds
-%patch23 -p1 -b .aligned-sleep
-%patch24 -p1 -b .deadsocket
-%patch25 -p1 -b .default-handler
-%patch26 -p1 -b .va_list
-%patch27 -p1 -b .openmax
+%patch1 -p1 -b .multilib
+%patch2 -p1 -b .lib-silent
+%patch3 -p1 -b .gcc4.3
+%patch4 -p1 -b .close-fds
+#%patch5 -p1 -b .doc
+%patch6 -p1 -b .weak-wgetch
 
 # mdv patches
 %patch50 -p1 -b .nodebug
@@ -132,7 +109,7 @@ cp %{SOURCE2} inputattach.c
 %serverbuild
 
 CFLAGS="$CFLAGS -D_GNU_SOURCE -DPIC -fPIC" \
-%configure %{?_without_curses}
+%configure2_5x %{?_without_curses}
 make
 
 gcc $CFLAGS -o inputattach inputattach.c
@@ -191,6 +168,8 @@ rm -rf %{buildroot}
 %defattr(-,root,root)
 %config(noreplace) %{_sysconfdir}/gpm-root.conf
 %{_initrddir}/gpm
+%{_bindir}/display-buttons
+%{_bindir}/display-coords
 %{_bindir}/mev
 %{_bindir}/gpm-root
 %{_bindir}/hltest

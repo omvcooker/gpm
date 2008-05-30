@@ -2,7 +2,7 @@
 %define build_curses %{?_without_curses:0}%{!?_without_curses:1}
 
 # this defines the library version that this package builds.
-%define LIBMAJ 1
+%define LIBMAJ 2
 %define LIBVER %{LIBMAJ}.19.0
 %define libname %mklibname %{name} %LIBMAJ
 %define develname %mklibname %{name} -d
@@ -186,7 +186,7 @@ rm -rf %{buildroot}
 
 %files -n %{libname}
 %defattr(-,root,root)
-%attr(0755,root,root) /%{_lib}/libgpm.so.*
+%attr(0755,root,root) /%{_lib}/libgpm.so.%{LIBMAJ}*
 
 %files -n %{develname}
 %defattr(-,root,root)

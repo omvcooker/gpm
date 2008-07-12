@@ -96,9 +96,6 @@ done
 %patch51 -p1 -b .docfix
 %patch52 -p1 -b .do_not_build_it_twice
 
-# handle patch1 mods
-autoconf
-
 # file is missing, copy in from the rpm package
 cp -p %{_prefix}/lib/rpm/mkinstalldirs .
 

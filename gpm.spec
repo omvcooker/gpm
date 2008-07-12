@@ -3,13 +3,13 @@
 
 # this defines the library version that this package builds.
 %define LIBMAJ 2
-%define LIBVER %{LIBMAJ}.0.0
+%define LIBVER %{LIBMAJ}.1.0
 %define libname %mklibname %{name} %LIBMAJ
 %define develname %mklibname %{name} -d
 
 Summary:	A mouse server for the Linux console
 Name:		gpm
-Version:	1.20.4
+Version:	1.20.5
 Release:	%mkrel 1
 License:	GPLv2+
 Group:		System/Servers
@@ -18,16 +18,16 @@ Source0:	http://ftp.linux.it/pub/People/rubini/gpm/%{name}-%{version}.tar.lzma
 Source1:	gpm.init
 Source2:	inputattach.c
 # fedora patches (gpm-1.20.1-89.fc8.src.rpm)
-Patch1: gpm-1.20.1-multilib.patch
+Patch1: gpm-1.20.5-multilib.patch
 Patch2: gpm-1.20.1-lib-silent.patch
 Patch3: gpm-1.20.3-gcc4.3.patch
 Patch4: gpm-1.20.3-close-fds.patch
 Patch5: gpm-1.20.1-doc.patch
-Patch6: gpm-1.20.1-weak-wgetch.patch
+Patch6: gpm-1.20.5-weak-wgetch.patch
 # mdv patches
-Patch50:	gpm-1.20.0-nodebug.patch
+Patch50:	gpm-1.20.5-nodebug.patch
 Patch51:	gpm-1.20.0-docfix.patch
-Patch52:	gpm-1.20.1-do_not_build_it_twice.diff
+Patch52:	gpm-1.20.5-do_not_build_it_twice.diff
 Requires(post): chkconfig, info-install, rpm-helper
 Requires(preun): chkconfig, info-install, rpm-helper
 BuildRequires:	byacc
@@ -131,7 +131,7 @@ install -m0644 conf/gpm-root.conf %{buildroot}%{_sysconfdir}
 #install -m0755 src/hltest %{buildroot}%{_bindir}
 install -m0755 inputattach %{buildroot}/%{_sbindir}
 
-ln -sf ../../%{_lib}/libgpm.so.%{LIBVER} %{buildroot}%{_libdir}/libgpm.so
+ln -sf /%{_lib}/libgpm.so.%{LIBVER} %{buildroot}%{_libdir}/libgpm.so
 ln -sf libgpm.so.%{LIBVER} %{buildroot}/%{_lib}/libgpm.so.%{LIBMAJ}
 mv %{buildroot}%{_libdir}/libgpm.so.* %{buildroot}/%{_lib}
 
@@ -179,6 +179,7 @@ rm -rf %{buildroot}
 %{_bindir}/hltest
 %{_bindir}/mouse-test
 %{_bindir}/disable-paste
+%{_bindir}/get-versions
 %{_sbindir}/gpm
 %{_sbindir}/inputattach
 %{_infodir}/gpm.info*

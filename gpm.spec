@@ -10,24 +10,25 @@
 Summary:	A mouse server for the Linux console
 Name:		gpm
 Version:	1.20.5
-Release:	%mkrel 1
+Release:	%mkrel 2
 License:	GPLv2+
 Group:		System/Servers
 URL:		ftp://arcana.linux.it/pub/gpm/
 Source0:	http://ftp.linux.it/pub/People/rubini/gpm/%{name}-%{version}.tar.lzma
 Source1:	gpm.init
 Source2:	inputattach.c
-# fedora patches (gpm-1.20.1-89.fc8.src.rpm)
-Patch1: gpm-1.20.5-multilib.patch
+# fedora patches (gpm-1.20.5-1.fc10.src.rpm)
+Patch1: gpm-1.20.1-multilib.patch
 Patch2: gpm-1.20.1-lib-silent.patch
 Patch3: gpm-1.20.3-gcc4.3.patch
-Patch4: gpm-1.20.3-close-fds.patch
-Patch5: gpm-1.20.1-doc.patch
-Patch6: gpm-1.20.5-weak-wgetch.patch
+Patch4: gpm-1.20.5-close-fds.patch
+Patch5: gpm-1.20.1-weak-wgetch.patch
+Patch6: gpm-1.20.5-ac_package_version.patch
 # mdv patches
 Patch50:	gpm-1.20.5-nodebug.patch
 Patch51:	gpm-1.20.0-docfix.patch
 Patch52:	gpm-1.20.5-do_not_build_it_twice.diff
+Patch53:	gpm-1.20.5-format_not_a_string_literal_and_no_format_arguments.diff
 Requires(post): chkconfig, info-install, rpm-helper
 Requires(preun): chkconfig, info-install, rpm-helper
 BuildRequires:	byacc
@@ -88,13 +89,14 @@ done
 %patch2 -p1 -b .lib-silent
 %patch3 -p1 -b .gcc4.3
 %patch4 -p1 -b .close-fds
-#%patch5 -p1 -b .doc
-%patch6 -p1 -b .weak-wgetch
+%patch5 -p1 -b .weak-wgetch
+%patch6 -p1 -b .ac_package_version
 
 # mdv patches
 %patch50 -p1 -b .nodebug
 %patch51 -p1 -b .docfix
 %patch52 -p1 -b .do_not_build_it_twice
+%patch53 -p0 -b .format_not_a_string_literal_and_no_format_arguments
 
 # file is missing, copy in from the rpm package
 cp -p %{_prefix}/lib/rpm/mkinstalldirs .

@@ -9,8 +9,8 @@
 
 Summary:	A mouse server for the Linux console
 Name:		gpm
-Version:	1.20.5
-Release:	%mkrel 2
+Version:	1.20.6
+Release:	%mkrel 1
 License:	GPLv2+
 Group:		System/Servers
 URL:		ftp://arcana.linux.it/pub/gpm/
@@ -23,7 +23,6 @@ Patch2: gpm-1.20.1-lib-silent.patch
 Patch3: gpm-1.20.3-gcc4.3.patch
 Patch4: gpm-1.20.5-close-fds.patch
 Patch5: gpm-1.20.1-weak-wgetch.patch
-Patch6: gpm-1.20.5-ac_package_version.patch
 # mdv patches
 Patch50:	gpm-1.20.5-nodebug.patch
 Patch51:	gpm-1.20.0-docfix.patch
@@ -90,7 +89,6 @@ done
 %patch3 -p1 -b .gcc4.3
 %patch4 -p1 -b .close-fds
 %patch5 -p1 -b .weak-wgetch
-%patch6 -p1 -b .ac_package_version
 
 # mdv patches
 %patch50 -p1 -b .nodebug

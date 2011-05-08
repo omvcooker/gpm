@@ -96,9 +96,6 @@ done
 %patch52 -p1 -b .do_not_build_it_twice
 %patch53 -p0 -b .format_not_a_string_literal_and_no_format_arguments
 
-# file is missing, copy in from the rpm package
-cp -p %{_prefix}/lib/rpm/mkinstalldirs .
-
 cp %{SOURCE1} gpm.init
 cp %{SOURCE2} inputattach.c
 

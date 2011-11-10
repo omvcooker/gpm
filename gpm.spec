@@ -1,5 +1,5 @@
 # Allow first build without ncurses support
-%define build_curses %{?_without_curses:0}%{!?_without_curses:1}
+%define build_curses %{!?_with_curses:0}%{?_with_curses:1}
 
 # this defines the library version that this package builds.
 %define LIBMAJ 2
@@ -10,13 +10,14 @@
 Summary:	A mouse server for the Linux console
 Name:		gpm
 Version:	1.20.6
-Release:	%mkrel 5
+Release:	%mkrel 6
 License:	GPLv2+
 Group:		System/Servers
 URL:		ftp://arcana.linux.it/pub/gpm/
 Source0:	http://ftp.linux.it/pub/People/rubini/gpm/%{name}-%{version}.tar.lzma
 Source1:	gpm.init
 Source2:	inputattach.c
+Source3:	gpm.service
 # fedora patches (gpm-1.20.5-1.fc10.src.rpm)
 Patch1: gpm-1.20.1-multilib.patch
 Patch2: gpm-1.20.1-lib-silent.patch
@@ -28,15 +29,16 @@ Patch50:	gpm-1.20.5-nodebug.patch
 Patch51:	gpm-1.20.0-docfix.patch
 Patch52:	gpm-1.20.5-do_not_build_it_twice.diff
 Patch53:	gpm-1.20.5-format_not_a_string_literal_and_no_format_arguments.diff
-Requires(post): chkconfig, info-install, rpm-helper
-Requires(preun): chkconfig, info-install, rpm-helper
 BuildRequires:	byacc
 %if %{build_curses}
 BuildRequires:	ncurses-devel
 %endif
 #BuildRequires:	texinfo autoconf2.1
 BuildRequires:	autoconf
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
+Requires(post):	systemd-units, chkconfig, info-install, rpm-helper
+Requires(preun): systemd-units, chkconfig, info-install, rpm-helper
+Requires(postun):systemd-units
+Requires:	%{libname} = %{version}-%{release}
 
 %description
 Gpm provides mouse support to text-based Linux applications like the
@@ -48,6 +50,7 @@ the click of a mouse button.
 Gpm should be installed if you intend to use a mouse with your
 MandrivaLinux system.
 
+#--------------------------------------------------------------------
 %package -n	%{libname}
 Summary:	Libraries and header files for developing mouse driven programs
 Group:		System/Libraries
@@ -55,28 +58,30 @@ Group:		System/Libraries
 %description -n	%{libname}
 Library used by the gpm program.
 
-Install %{libname}dev if you need to develop text-mode programs which will use
-the mouse.  You'll also need to install the gpm package.
+Install %{libname}dev if you need to develop text-mode programs which 
+will use the mouse. You'll also need to install the gpm package.
 
+#--------------------------------------------------------------------
 %package -n	%{develname}
 Summary:	Libraries and header files for developing mouse driven programs
 Group:		Development/C
-Requires:	%{libname} = %{version}
-Provides:	gpm-devel libgpm-devel
-Obsoletes:	gpm-devel
-Provides:	%{mklibname %{name} 1 -d} = %{version}
-Obsoletes:	%{mklibname %{name} 1 -d}
+Requires:	%{libname} = %{version}-%{release}
+Provides:	libgpm-devel
+Obsoletes:	gpm-devel < %{version}-%{release}
+Provides:	gpm-devel = %{version}-%{release}
+Obsoletes:	%{mklibname %{name} 1 -d} < %{version}-%{release}
+Provides:	%{mklibname %{name} 1 -d} = %{version}-%{release}
 
 %description -n	%{develname}
 The %{develname} package contains the libraries and header files needed
 for development of mouse driven programs.  This package allows you to
 develop text-mode programs which use the mouse.
 
-Install %{develname} if you need to develop text-mode programs which will use
-the mouse.  You'll also need to install the gpm package.
+Install %{develname} if you need to develop text-mode programs which
+will use the mouse. You'll also need to install the gpm package.
 
+#--------------------------------------------------------------------
 %prep
-
 %setup -q
 
 for i in `find . -type d -name CVS` `find . -type f -name .cvs\*` `find . -type f -name .#\*`; do
@@ -101,7 +106,6 @@ cp %{SOURCE2} inputattach.c
 
 %build
 %serverbuild
-
 CFLAGS="$CFLAGS -D_GNU_SOURCE -DPIC -fPIC" \
 %configure2_5x %{?_without_curses}
 make
@@ -130,8 +134,11 @@ ln -sf libgpm.so.%{LIBVER} %{buildroot}/%{_lib}/libgpm.so.%{LIBMAJ}
 mv %{buildroot}%{_libdir}/libgpm.so.* %{buildroot}/%{_lib}
 
 install -m0755 gpm.init %{buildroot}%{_initrddir}/gpm
-
 perl -pi -e "s|/etc/rc.d/init.d|%{_initrddir}|" %{buildroot}%{_initrddir}/*
+
+# Zé: Systemd
+install -d -m755 %{buildroot}%{_sysconfdir}/systemd/system/
+install -m644 %{S:3} %{buildroot}%{_sysconfdir}/systemd/system/
 
 # cleanup
 rm -rf %{buildroot}%{_datadir}/emacs/site-lisp
@@ -139,18 +146,32 @@ rm -rf %{buildroot}%{_datadir}/emacs/site-lisp
 %post
 %_post_service gpm
 if [ -x "/sbin/install-info" ]; then
-%_install_info %{name}.info
+    %_install_info %{name}.info
 fi
-
+# Zé: install; upgrade
+if [ "$1" -ge 1 ]; then
+    /bin/systemctl enable gpm.service
+fi
 # handle init sequence change
 if [ -f /etc/rc5.d/S85gpm ]; then
-	/sbin/chkconfig --add gpm
+    /sbin/chkconfig --add gpm
 fi
 
 %preun
 %_preun_service gpm
 %_remove_install_info %{name}.info
+# Zé: upgrade, not removal
+if [ "$1" -eq 1 ] ; then
+    /bin/systemctl try-restart gpm.service
+fi
 
+%postun
+# Zé: removal
+if [ "$1" -eq 0 ]; then
+    /bin/systemctl --no-reload gpm.service
+    /bin/systemctl stop gpm.service
+fi
+ 
 %if %mdkversion < 200900
 %post -n %{libname} -p /sbin/ldconfig
 %endif
@@ -159,12 +180,10 @@ fi
 %postun -n %{libname} -p /sbin/ldconfig
 %endif
 
-%clean
-rm -rf %{buildroot}
 
 %files
-%defattr(-,root,root)
 %config(noreplace) %{_sysconfdir}/gpm-root.conf
+%{_sysconfdir}/systemd/system/gpm.service
 %{_initrddir}/gpm
 %{_bindir}/display-buttons
 %{_bindir}/display-coords
@@ -184,11 +203,9 @@ rm -rf %{buildroot}
 %{_mandir}/man8/gpm.8*
 
 %files -n %{libname}
-%defattr(-,root,root)
 %attr(0755,root,root) /%{_lib}/libgpm.so.%{LIBMAJ}*
 
 %files -n %{develname}
-%defattr(-,root,root)
 %{_libdir}/libgpm.a
 %{_includedir}/gpm.h
 %{_libdir}/libgpm.so

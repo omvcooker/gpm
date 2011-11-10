@@ -1,16 +1,16 @@
 # Allow first build without ncurses support
-%define build_curses %{!?_with_curses:0}%{?_with_curses:1}
+%define build_ncurses %{!?_with_ncurses:0}%{?_with_ncurses:1}
 
 # this defines the library version that this package builds.
 %define LIBMAJ 2
 %define LIBVER %{LIBMAJ}.1.0
-%define libname %mklibname %{name} %LIBMAJ
+%define libname %mklibname %{name} %{LIBMAJ}
 %define develname %mklibname %{name} -d
 
 Summary:	A mouse server for the Linux console
 Name:		gpm
 Version:	1.20.6
-Release:	%mkrel 6
+Release:	%mkrel 7
 License:	GPLv2+
 Group:		System/Servers
 URL:		ftp://arcana.linux.it/pub/gpm/
@@ -30,7 +30,7 @@ Patch51:	gpm-1.20.0-docfix.patch
 Patch52:	gpm-1.20.5-do_not_build_it_twice.diff
 Patch53:	gpm-1.20.5-format_not_a_string_literal_and_no_format_arguments.diff
 BuildRequires:	byacc
-%if %{build_curses}
+%if %{build_ncurses}
 BuildRequires:	ncurses-devel
 %endif
 #BuildRequires:	texinfo autoconf2.1
@@ -38,7 +38,6 @@ BuildRequires:	autoconf
 Requires(post):	systemd-units, chkconfig, info-install, rpm-helper
 Requires(preun): systemd-units, chkconfig, info-install, rpm-helper
 Requires(postun):systemd-units
-Requires:	%{libname} = %{version}-%{release}
 
 %description
 Gpm provides mouse support to text-based Linux applications like the
@@ -65,7 +64,7 @@ will use the mouse. You'll also need to install the gpm package.
 %package -n	%{develname}
 Summary:	Libraries and header files for developing mouse driven programs
 Group:		Development/C
-Requires:	%{libname} = %{version}-%{release}
+Requires:	%{libname} = %{version}
 Provides:	libgpm-devel
 Obsoletes:	gpm-devel < %{version}-%{release}
 Provides:	gpm-devel = %{version}-%{release}
@@ -83,7 +82,6 @@ will use the mouse. You'll also need to install the gpm package.
 #--------------------------------------------------------------------
 %prep
 %setup -q
-
 for i in `find . -type d -name CVS` `find . -type f -name .cvs\*` `find . -type f -name .#\*`; do
     if [ -e "$i" ]; then rm -rf $i; fi >&/dev/null
 done
@@ -107,8 +105,8 @@ cp %{SOURCE2} inputattach.c
 %build
 %serverbuild
 CFLAGS="$CFLAGS -D_GNU_SOURCE -DPIC -fPIC" \
-%configure2_5x %{?_without_curses}
-make
+%configure2_5x %{?_without_ncurses}
+%make
 
 gcc $CFLAGS -o inputattach inputattach.c
 

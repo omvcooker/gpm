@@ -10,7 +10,7 @@
 Summary:	A mouse server for the Linux console
 Name:		gpm
 Version:	1.20.6
-Release:	%mkrel 7
+Release:	8
 License:	GPLv2+
 Group:		System/Servers
 URL:		ftp://arcana.linux.it/pub/gpm/
@@ -19,11 +19,11 @@ Source1:	gpm.init
 Source2:	inputattach.c
 Source3:	gpm.service
 # fedora patches (gpm-1.20.5-1.fc10.src.rpm)
-Patch1: gpm-1.20.1-multilib.patch
-Patch2: gpm-1.20.1-lib-silent.patch
-Patch3: gpm-1.20.3-gcc4.3.patch
-Patch4: gpm-1.20.5-close-fds.patch
-Patch5: gpm-1.20.1-weak-wgetch.patch
+Patch1:		gpm-1.20.1-multilib.patch
+Patch2:		gpm-1.20.1-lib-silent.patch
+Patch3:		gpm-1.20.3-gcc4.3.patch
+Patch4:		gpm-1.20.5-close-fds.patch
+Patch5:		gpm-1.20.1-weak-wgetch.patch
 # mdv patches
 Patch50:	gpm-1.20.5-nodebug.patch
 Patch51:	gpm-1.20.0-docfix.patch
@@ -35,8 +35,8 @@ BuildRequires:	ncurses-devel
 %endif
 #BuildRequires:	texinfo autoconf2.1
 BuildRequires:	autoconf
-Requires(post):	systemd-units, chkconfig, info-install, rpm-helper
-Requires(preun): systemd-units, chkconfig, info-install, rpm-helper
+Requires(post):	systemd-units, chkconfig, rpm-helper
+Requires(preun): systemd-units, chkconfig, rpm-helper
 Requires(postun):systemd-units
 
 %description
@@ -143,9 +143,6 @@ rm -rf %{buildroot}%{_datadir}/emacs/site-lisp
 
 %post
 %_post_service gpm
-if [ -x "/sbin/install-info" ]; then
-    %_install_info %{name}.info
-fi
 # Zé: install; upgrade
 if [ "$1" -ge 1 ]; then
     /bin/systemctl enable gpm.service
@@ -157,7 +154,6 @@ fi
 
 %preun
 %_preun_service gpm
-%_remove_install_info %{name}.info
 # Zé: upgrade, not removal
 if [ "$1" -eq 1 ] ; then
     /bin/systemctl try-restart gpm.service
@@ -169,15 +165,6 @@ if [ "$1" -eq 0 ]; then
     /bin/systemctl --no-reload gpm.service
     /bin/systemctl stop gpm.service
 fi
- 
-%if %mdkversion < 200900
-%post -n %{libname} -p /sbin/ldconfig
-%endif
-
-%if %mdkversion < 200900
-%postun -n %{libname} -p /sbin/ldconfig
-%endif
-
 
 %files
 %config(noreplace) %{_sysconfdir}/gpm-root.conf

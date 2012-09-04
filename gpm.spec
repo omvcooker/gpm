@@ -103,7 +103,6 @@ cp %{SOURCE1} gpm.init
 cp %{SOURCE2} inputattach.c
 
 %build
-%serverbuild
 CFLAGS="$CFLAGS -D_GNU_SOURCE -DPIC -fPIC" \
 %configure2_5x %{?_without_ncurses}
 %make

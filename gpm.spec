@@ -1,6 +1,8 @@
 # Allow first build without ncurses support
 %define build_ncurses %{!?_with_ncurses:0}%{?_with_ncurses:1}
 
+%bcond_without	uclibc
+
 # this defines the library version that this package builds.
 %define LIBMAJ 2
 %define LIBVER %{LIBMAJ}.1.0
@@ -10,7 +12,7 @@
 Summary:	A mouse server for the Linux console
 Name:		gpm
 Version:	1.20.6
-Release:	8
+Release:	9
 License:	GPLv2+
 Group:		System/Servers
 URL:		ftp://arcana.linux.it/pub/gpm/
@@ -29,9 +31,15 @@ Patch50:	gpm-1.20.5-nodebug.patch
 Patch51:	gpm-1.20.0-docfix.patch
 Patch52:	gpm-1.20.5-do_not_build_it_twice.diff
 Patch53:	gpm-1.20.5-format_not_a_string_literal_and_no_format_arguments.diff
+# these automake files are utter crap, so just let's rip out the stuff that really doesn't belong
+# there, we don't use and that's causing problem..
+Patch54:	gpm-1.20.6-fix-out-of-source-build.patch
 BuildRequires:	byacc
 %if %{build_ncurses}
 BuildRequires:	ncurses-devel
+%endif
+%if %{with uclibc}
+BuildRequires:	uClibc-devel >= 0.9.33.2-3
 %endif
 #BuildRequires:	texinfo autoconf2.1
 BuildRequires:	autoconf
@@ -98,6 +106,7 @@ done
 %patch51 -p1 -b .docfix
 %patch52 -p1 -b .do_not_build_it_twice
 %patch53 -p0 -b .format_not_a_string_literal_and_no_format_arguments
+%patch54 -p1 -b .out_of_source~
 
 cp %{SOURCE1} gpm.init
 cp %{SOURCE2} inputattach.c
@@ -105,9 +114,22 @@ cp %{SOURCE2} inputattach.c
 %build
 CFLAGS="$CFLAGS -D_GNU_SOURCE -DPIC -fPIC" \
 %configure2_5x %{?_without_ncurses}
-%make
+make
 
 gcc $CFLAGS -o inputattach inputattach.c
+
+%if %{with uclibc}
+mkdir -p uclibc
+pushd uclibc
+CONFIGURE_TOP=.. \
+CC="%{uclibc_cc}" \
+CFLAGS="%{uclibc_cflags} -D_GNU_SOURCE -DPIC -fPIC" \
+LDFLAGS="%{ldflags} -Wl,-O2 -flto" \
+%configure2_5x	--prefix=%{uclibc_root} \
+		--libdir=%{uclibc_root}%{_libdir}
+%make -C src/ lib/libgpm.a 
+popd
+%endif
 
 %install
 rm -rf %{buildroot}
@@ -136,6 +158,10 @@ perl -pi -e "s|/etc/rc.d/init.d|%{_initrddir}|" %{buildroot}%{_initrddir}/*
 # Zé: Systemd
 install -d -m755 %{buildroot}%{_sysconfdir}/systemd/system/
 install -m644 %{S:3} %{buildroot}%{_sysconfdir}/systemd/system/
+
+%if %{with uclibc}
+install -m644 uclibc/src/lib/libgpm.a -D %{buildroot}%{uclibc_root}%{_libdir}/libgpm.a
+%endif
 
 # cleanup
 rm -rf %{buildroot}%{_datadir}/emacs/site-lisp
@@ -191,5 +217,8 @@ fi
 
 %files -n %{develname}
 %{_libdir}/libgpm.a
+%if %{with uclibc}
+%{uclibc_root}%{_libdir}/libgpm.a
+%endif
 %{_includedir}/gpm.h
 %{_libdir}/libgpm.so

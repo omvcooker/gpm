@@ -112,7 +112,7 @@ cp %{SOURCE1} gpm.init
 cp %{SOURCE2} inputattach.c
 
 %build
-CFLAGS="$CFLAGS -D_GNU_SOURCE -DPIC -fPIC" \
+CFLAGS="%{optflags} -D_GNU_SOURCE -DPIC -fPIC" \
 %configure2_5x	\
 %if !%{with ncurses}
 		--without-curses
@@ -120,7 +120,7 @@ CFLAGS="$CFLAGS -D_GNU_SOURCE -DPIC -fPIC" \
 
 make
 
-gcc $CFLAGS -o inputattach inputattach.c
+gcc %{optflags} %{ldflags} -o inputattach inputattach.c
 
 %if %{with uclibc}
 mkdir -p uclibc

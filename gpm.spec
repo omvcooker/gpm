@@ -1,6 +1,4 @@
-# Allow first build without ncurses support
-%define build_ncurses %{!?_with_ncurses:0}%{?_with_ncurses:1}
-
+%bcond_without	ncurses
 %bcond_without	uclibc
 
 # this defines the library version that this package builds.
@@ -36,7 +34,7 @@ Patch53:	gpm-1.20.5-format_not_a_string_literal_and_no_format_arguments.diff
 Patch54:	gpm-1.20.6-fix-out-of-source-build.patch
 Patch55:	gpm-1.20.6-dont-include-missing-header.patch
 BuildRequires:	byacc
-%if %{build_ncurses}
+%if %{with ncurses}
 BuildRequires:	ncurses-devel
 %endif
 %if %{with uclibc}
@@ -96,17 +94,17 @@ for i in `find . -type d -name CVS` `find . -type f -name .cvs\*` `find . -type 
 done
     
 # fedora patches
-%patch1 -p1 -b .multilib
-%patch2 -p1 -b .lib-silent
-%patch3 -p1 -b .gcc4.3
-%patch4 -p1 -b .close-fds
-%patch5 -p1 -b .weak-wgetch
+%patch1 -p1 -b .multilib~
+%patch2 -p1 -b .lib-silent́~
+%patch3 -p1 -b .gcc4.3~
+%patch4 -p1 -b .close-fd~
+%patch5 -p1 -b .weak-wgetch~
 
 # mdv patches
-%patch50 -p1 -b .nodebug
-%patch51 -p1 -b .docfix
-%patch52 -p1 -b .do_not_build_it_twice
-%patch53 -p0 -b .format_not_a_string_literal_and_no_format_arguments
+%patch50 -p1 -b .nodebug~
+%patch51 -p1 -b .docfix~
+%patch52 -p1 -b .do_not_build_it_twice~
+%patch53 -p0 -b .format_not_a_string_literal_and_no_format_arguments~
 %patch54 -p1 -b .out_of_source~
 %patch55 -p1 -b .missing_include~
 
@@ -115,7 +113,11 @@ cp %{SOURCE2} inputattach.c
 
 %build
 CFLAGS="$CFLAGS -D_GNU_SOURCE -DPIC -fPIC" \
-%configure2_5x %{?_without_ncurses}
+%configure2_5x	\
+%if !%{with ncurses}
+		--without-curses
+%endif
+
 make
 
 gcc $CFLAGS -o inputattach inputattach.c

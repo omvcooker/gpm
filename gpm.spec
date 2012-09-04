@@ -34,6 +34,7 @@ Patch53:	gpm-1.20.5-format_not_a_string_literal_and_no_format_arguments.diff
 # these automake files are utter crap, so just let's rip out the stuff that really doesn't belong
 # there, we don't use and that's causing problem..
 Patch54:	gpm-1.20.6-fix-out-of-source-build.patch
+Patch55:	gpm-1.20.6-dont-include-missing-header.patch
 BuildRequires:	byacc
 %if %{build_ncurses}
 BuildRequires:	ncurses-devel
@@ -107,6 +108,7 @@ done
 %patch52 -p1 -b .do_not_build_it_twice
 %patch53 -p0 -b .format_not_a_string_literal_and_no_format_arguments
 %patch54 -p1 -b .out_of_source~
+%patch55 -p1 -b .missing_include~
 
 cp %{SOURCE1} gpm.init
 cp %{SOURCE2} inputattach.c

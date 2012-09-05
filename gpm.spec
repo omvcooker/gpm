@@ -89,9 +89,7 @@ will use the mouse. You'll also need to install the gpm package.
 #--------------------------------------------------------------------
 %prep
 %setup -q
-for i in `find . -type d -name CVS` `find . -type f -name .cvs\*` `find . -type f -name .#\*`; do
-    if [ -e "$i" ]; then rm -rf $i; fi >&/dev/null
-done
+find -name \*.c |xargs chmod 644
     
 # fedora patches
 %patch1 -p1 -b .multilib~
@@ -155,6 +153,7 @@ install -m0755 inputattach %{buildroot}/%{_sbindir}
 ln -sf /%{_lib}/libgpm.so.%{libver} %{buildroot}%{_libdir}/libgpm.so
 ln -sf libgpm.so.%{libver} %{buildroot}/%{_lib}/libgpm.so.%{major}
 mv %{buildroot}%{_libdir}/libgpm.so.* %{buildroot}/%{_lib}
+chmod 755 %{buildroot}/%{_lib}/libgpm.so.%{libver}
 
 install -m0755 gpm.init %{buildroot}%{_initrddir}/gpm
 perl -pi -e "s|/etc/rc.d/init.d|%{_initrddir}|" %{buildroot}%{_initrddir}/*

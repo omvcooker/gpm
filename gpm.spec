@@ -2,10 +2,10 @@
 %bcond_without	uclibc
 
 # this defines the library version that this package builds.
-%define LIBMAJ 2
-%define LIBVER %{LIBMAJ}.1.0
-%define libname %mklibname %{name} %{LIBMAJ}
-%define develname %mklibname %{name} -d
+%define	major	2
+%define	libver	%{major}.1.0
+%define	libname	%mklibname %{name} %{major}
+%define	devname	%mklibname %{name} -d
 
 Summary:	A mouse server for the Linux console
 Name:		gpm
@@ -68,7 +68,7 @@ Install %{libname}dev if you need to develop text-mode programs which
 will use the mouse. You'll also need to install the gpm package.
 
 #--------------------------------------------------------------------
-%package -n	%{develname}
+%package -n	%{devname}
 Summary:	Libraries and header files for developing mouse driven programs
 Group:		Development/C
 Requires:	%{libname} = %{version}
@@ -78,12 +78,12 @@ Provides:	gpm-devel = %{version}-%{release}
 Obsoletes:	%{mklibname %{name} 1 -d} < %{version}-%{release}
 Provides:	%{mklibname %{name} 1 -d} = %{version}-%{release}
 
-%description -n	%{develname}
-The %{develname} package contains the libraries and header files needed
+%description -n	%{devname}
+The %{devname} package contains the libraries and header files needed
 for development of mouse driven programs.  This package allows you to
 develop text-mode programs which use the mouse.
 
-Install %{develname} if you need to develop text-mode programs which
+Install %{devname} if you need to develop text-mode programs which
 will use the mouse. You'll also need to install the gpm package.
 
 #--------------------------------------------------------------------
@@ -152,8 +152,8 @@ install -m0644 conf/gpm-root.conf %{buildroot}%{_sysconfdir}
 #install -m0755 src/hltest %{buildroot}%{_bindir}
 install -m0755 inputattach %{buildroot}/%{_sbindir}
 
-ln -sf /%{_lib}/libgpm.so.%{LIBVER} %{buildroot}%{_libdir}/libgpm.so
-ln -sf libgpm.so.%{LIBVER} %{buildroot}/%{_lib}/libgpm.so.%{LIBMAJ}
+ln -sf /%{_lib}/libgpm.so.%{libver} %{buildroot}%{_libdir}/libgpm.so
+ln -sf libgpm.so.%{libver} %{buildroot}/%{_lib}/libgpm.so.%{major}
 mv %{buildroot}%{_libdir}/libgpm.so.* %{buildroot}/%{_lib}
 
 install -m0755 gpm.init %{buildroot}%{_initrddir}/gpm
@@ -217,9 +217,9 @@ fi
 %{_mandir}/man8/gpm.8*
 
 %files -n %{libname}
-%attr(0755,root,root) /%{_lib}/libgpm.so.%{LIBMAJ}*
+%attr(0755,root,root) /%{_lib}/libgpm.so.%{major}*
 
-%files -n %{develname}
+%files -n %{devname}
 %{_libdir}/libgpm.a
 %if %{with uclibc}
 %{uclibc_root}%{_libdir}/libgpm.a

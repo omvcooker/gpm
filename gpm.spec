@@ -156,7 +156,7 @@ chmod 755 %{buildroot}/%{_lib}/libgpm.so.%{libver}
 install -m0755 gpm.init %{buildroot}%{_initrddir}/gpm
 perl -pi -e "s|/etc/rc.d/init.d|%{_initrddir}|" %{buildroot}%{_initrddir}/*
 
-install -m644 %{SOURCE3} -D%{buildroot}%{_unitdir}/gpm.service
+install -m644 %{SOURCE3} -D %{buildroot}%{_unitdir}/gpm.service
 
 %if %{with uclibc}
 install -m644 uclibc/src/lib/libgpm.a -D %{buildroot}%{uclibc_root}%{_libdir}/libgpm.a

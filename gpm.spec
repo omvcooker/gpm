@@ -9,30 +9,29 @@
 
 Summary:	A mouse server for the Linux console
 Name:		gpm
-Version:	1.20.6
-Release:	9
+Version:	1.20.7
+Release:	1
 License:	GPLv2+
 Group:		System/Servers
-URL:		ftp://arcana.linux.it/pub/gpm/
-Source0:	http://ftp.linux.it/pub/People/rubini/gpm/%{name}-%{version}.tar.lzma
+URL:		http://www.nico.schottelius.org/software/gpm/
+Source0:	http://www.nico.schottelius.org/software/gpm/archives/%{name}-%{version}.tar.lzma
 Source1:	gpm.init
 Source2:	inputattach.c
 Source3:	gpm.service
 # fedora patches (gpm-1.20.5-1.fc10.src.rpm)
 Patch1:		gpm-1.20.1-multilib.patch
 Patch2:		gpm-1.20.1-lib-silent.patch
-Patch3:		gpm-1.20.3-gcc4.3.patch
 Patch4:		gpm-1.20.5-close-fds.patch
-Patch5:		gpm-1.20.1-weak-wgetch.patch
+Patch5:		gpm-1.20.7-weak-wgetch.patch
 # mdv patches
 Patch50:	gpm-1.20.5-nodebug.patch
 Patch51:	gpm-1.20.0-docfix.patch
-Patch52:	gpm-1.20.5-do_not_build_it_twice.diff
+Patch52:	gpm-1.20.7-do_not_build_it_twice.diff
 Patch53:	gpm-1.20.5-format_not_a_string_literal_and_no_format_arguments.diff
 # these automake files are utter crap, so just let's rip out the stuff that really doesn't belong
 # there, we don't use and that's causing problem..
-Patch54:	gpm-1.20.6-fix-out-of-source-build.patch
-Patch55:	gpm-1.20.6-dont-include-missing-header.patch
+Patch54:       gpm-1.20.7-fix-out-of-source-build.patch
+
 BuildRequires:	byacc
 %if %{with ncurses}
 BuildRequires:	ncurses-devel
@@ -94,7 +93,6 @@ find -name \*.c |xargs chmod 644
 # fedora patches
 %patch1 -p1 -b .multilib~
 %patch2 -p1 -b .lib-silent́~
-%patch3 -p1 -b .gcc4.3~
 %patch4 -p1 -b .close-fd~
 %patch5 -p1 -b .weak-wgetch~
 
@@ -104,10 +102,11 @@ find -name \*.c |xargs chmod 644
 %patch52 -p1 -b .do_not_build_it_twice~
 %patch53 -p0 -b .format_not_a_string_literal_and_no_format_arguments~
 %patch54 -p1 -b .out_of_source~
-%patch55 -p1 -b .missing_include~
 
 cp %{SOURCE1} gpm.init
 cp %{SOURCE2} inputattach.c
+
+./autogen.sh
 
 %build
 CFLAGS="%{optflags} -D_GNU_SOURCE -DPIC -fPIC" \

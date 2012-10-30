@@ -3,7 +3,6 @@
 
 # this defines the library version that this package builds.
 %define	major	2
-%define	libver	%{major}.1.0
 %define	libname	%mklibname %{name} %{major}
 %define	devname	%mklibname %{name} -d
 
@@ -30,16 +29,16 @@ Patch52:	gpm-1.20.7-do_not_build_it_twice.diff
 Patch53:	gpm-1.20.5-format_not_a_string_literal_and_no_format_arguments.diff
 # these automake files are utter crap, so just let's rip out the stuff that really doesn't belong
 # there, we don't use and that's causing problem..
-Patch54:       gpm-1.20.7-fix-out-of-source-build.patch
+Patch54:	gpm-1.20.7-fix-out-of-source-build.patch
 
 BuildRequires:	byacc
 %if %{with ncurses}
-BuildRequires:	ncurses-devel
+BuildRequires:	pkgconfig(ncursesw)
 %endif
 %if %{with uclibc}
 BuildRequires:	uClibc-devel >= 0.9.33.2-3
 %endif
-#BuildRequires:	texinfo autoconf2.1
+#BuildRequires:	texinfo
 BuildRequires:	autoconf
 Requires(post):	chkconfig, rpm-helper
 Requires(preun):chkconfig, rpm-helper
@@ -54,7 +53,6 @@ the click of a mouse button.
 Gpm should be installed if you intend to use a mouse with your
 MandrivaLinux system.
 
-#--------------------------------------------------------------------
 %package -n	%{libname}
 Summary:	Libraries and header files for developing mouse driven programs
 Group:		System/Libraries
@@ -84,7 +82,6 @@ develop text-mode programs which use the mouse.
 Install %{devname} if you need to develop text-mode programs which
 will use the mouse. You'll also need to install the gpm package.
 
-#--------------------------------------------------------------------
 %prep
 %setup -q
 find -name \*.c |xargs chmod 644
@@ -102,13 +99,12 @@ find -name \*.c |xargs chmod 644
 %patch53 -p0 -b .format_not_a_string_literal_and_no_format_arguments~
 %patch54 -p1 -b .out_of_source~
 
-cp %{SOURCE1} gpm.init
 cp %{SOURCE2} inputattach.c
 
 ./autogen.sh
 
 %build
-CFLAGS="%{optflags} -D_GNU_SOURCE -DPIC -fPIC" \
+CONFIGURE_TOP="$PWD"
 %configure2_5x	\
 %if !%{with ncurses}
 		--without-curses
@@ -121,41 +117,22 @@ gcc %{optflags} %{ldflags} -o inputattach inputattach.c
 %if %{with uclibc}
 mkdir -p uclibc
 pushd uclibc
-CONFIGURE_TOP=.. \
-CC="%{uclibc_cc}" \
-CFLAGS="%{uclibc_cflags} -D_GNU_SOURCE -DPIC -fPIC" \
-LDFLAGS="%{ldflags} -Wl,-O2 -flto" \
-%configure2_5x	--prefix=%{uclibc_root} \
-		--libdir=%{uclibc_root}%{_libdir}
+%uclibc_configure
 %make -C src/ lib/libgpm.a 
 popd
 %endif
 
 %install
-rm -rf %{buildroot}
-
-install -d %{buildroot}%{_sysconfdir}
-install -d %{buildroot}%{_initrddir}  
-install -d %{buildroot}/%{_lib}
-install -d %{buildroot}%{_datadir}/emacs/site-lisp
-
-PATH=/sbin:$PATH:%{_sbindir}:$PATH
-
 %makeinstall
 
-install -m0644 doc/gpm-root.1 %{buildroot}%{_mandir}/man1
-install -m0644 conf/gpm-root.conf %{buildroot}%{_sysconfdir}
-#install -m0755 src/hltest %{buildroot}%{_bindir}
-install -m0755 inputattach %{buildroot}/%{_sbindir}
+install -m644 conf/gpm-root.conf -D %{buildroot}%{_sysconfdir}/gpm-root.conf
+install -m755 inputattach -D %{buildroot}%{_sbindir}/inputattach
 
-ln -sf /%{_lib}/libgpm.so.%{libver} %{buildroot}%{_libdir}/libgpm.so
-ln -sf libgpm.so.%{libver} %{buildroot}/%{_lib}/libgpm.so.%{major}
-mv %{buildroot}%{_libdir}/libgpm.so.* %{buildroot}/%{_lib}
-chmod 755 %{buildroot}/%{_lib}/libgpm.so.%{libver}
+mkdir -p %{buildroot}/%{_lib}
+mv %{buildroot}%{_libdir}/libgpm.so.%{major}* %{buildroot}/%{_lib}
+ln -srf %{buildroot}/%{_lib}/libgpm.so.%{major}.*.* %{buildroot}%{_libdir}/libgpm.so
 
-install -m0755 gpm.init %{buildroot}%{_initrddir}/gpm
-perl -pi -e "s|/etc/rc.d/init.d|%{_initrddir}|" %{buildroot}%{_initrddir}/*
-
+install -m755 %{SOURCE1} -D %{buildroot}%{_initrddir}/gpm
 install -m644 %{SOURCE3} -D %{buildroot}%{_unitdir}/gpm.service
 
 %if %{with uclibc}
@@ -163,7 +140,7 @@ install -m644 uclibc/src/lib/libgpm.a -D %{buildroot}%{uclibc_root}%{_libdir}/li
 %endif
 
 # cleanup
-rm -rf %{buildroot}%{_datadir}/emacs/site-lisp
+rm -r %{buildroot}%{_datadir}/emacs/site-lisp
 
 %post
 %_post_service gpm
@@ -197,7 +174,7 @@ fi
 %{_mandir}/man8/gpm.8*
 
 %files -n %{libname}
-%attr(0755,root,root) /%{_lib}/libgpm.so.%{major}*
+/%{_lib}/libgpm.so.%{major}*
 
 %files -n %{devname}
 %{_libdir}/libgpm.a

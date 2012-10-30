@@ -38,7 +38,7 @@ BuildRequires:	pkgconfig(ncursesw)
 %if %{with uclibc}
 BuildRequires:	uClibc-devel >= 0.9.33.2-3
 %endif
-#BuildRequires:	texinfo
+BuildRequires:	texinfo
 BuildRequires:	autoconf
 Requires(post):	chkconfig, rpm-helper
 Requires(preun):chkconfig, rpm-helper
@@ -63,7 +63,6 @@ Library used by the gpm program.
 Install %{libname}dev if you need to develop text-mode programs which 
 will use the mouse. You'll also need to install the gpm package.
 
-#--------------------------------------------------------------------
 %package -n	%{devname}
 Summary:	Libraries and header files for developing mouse driven programs
 Group:		Development/C

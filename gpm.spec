@@ -41,9 +41,8 @@ BuildRequires:	uClibc-devel >= 0.9.33.2-3
 %endif
 #BuildRequires:	texinfo autoconf2.1
 BuildRequires:	autoconf
-Requires(post):	systemd-units, chkconfig, rpm-helper
-Requires(preun): systemd-units, chkconfig, rpm-helper
-Requires(postun):systemd-units
+Requires(post):	chkconfig, rpm-helper
+Requires(preun):chkconfig, rpm-helper
 
 %description
 Gpm provides mouse support to text-based Linux applications like the
@@ -170,10 +169,6 @@ rm -rf %{buildroot}%{_datadir}/emacs/site-lisp
 
 %post
 %_post_service gpm
-# Zé: install; upgrade
-if [ "$1" -ge 1 ]; then
-    /bin/systemctl enable gpm.service
-fi
 # handle init sequence change
 if [ -f /etc/rc5.d/S85gpm ]; then
     /sbin/chkconfig --add gpm
@@ -181,17 +176,6 @@ fi
 
 %preun
 %_preun_service gpm
-# Zé: upgrade, not removal
-if [ "$1" -eq 1 ] ; then
-    /bin/systemctl try-restart gpm.service
-fi
-
-%postun
-# Zé: removal
-if [ "$1" -eq 0 ]; then
-    /bin/systemctl --no-reload gpm.service
-    /bin/systemctl stop gpm.service
-fi
 
 %files
 %config(noreplace) %{_sysconfdir}/gpm-root.conf

@@ -156,9 +156,7 @@ chmod 755 %{buildroot}/%{_lib}/libgpm.so.%{libver}
 install -m0755 gpm.init %{buildroot}%{_initrddir}/gpm
 perl -pi -e "s|/etc/rc.d/init.d|%{_initrddir}|" %{buildroot}%{_initrddir}/*
 
-# Zé: Systemd
-install -d -m755 %{buildroot}%{_sysconfdir}/systemd/system/
-install -m644 %{S:3} %{buildroot}%{_sysconfdir}/systemd/system/
+install -m644 %{SOURCE3} -D%{buildroot}%{_unitdir}/gpm.service
 
 %if %{with uclibc}
 install -m644 uclibc/src/lib/libgpm.a -D %{buildroot}%{uclibc_root}%{_libdir}/libgpm.a
@@ -179,7 +177,7 @@ fi
 
 %files
 %config(noreplace) %{_sysconfdir}/gpm-root.conf
-%{_sysconfdir}/systemd/system/gpm.service
+%{_unitdir}/gpm.service
 %{_initrddir}/gpm
 %{_bindir}/display-buttons
 %{_bindir}/display-coords

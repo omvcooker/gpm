@@ -53,6 +53,17 @@ the click of a mouse button.
 Gpm should be installed if you intend to use a mouse with your
 MandrivaLinux system.
 
+%package -n	uclibc-%{name}
+Summary:	A mouse server for the Linux console (uClibc build)
+Group:		System/Servers
+
+%description -n	uclibc-%{name}
+Gpm provides mouse support to text-based Linux applications like the
+emacs editor, the Midnight Commander file management system, and other
+programs.  Gpm also provides console cut-and-paste operations using
+the mouse and includes a program to allow pop-up menus to appear at
+the click of a mouse button.
+
 %package -n	%{libname}
 Summary:	Libraries and header files for developing mouse driven programs
 Group:		System/Libraries
@@ -63,10 +74,21 @@ Library used by the gpm program.
 Install %{libname}dev if you need to develop text-mode programs which 
 will use the mouse. You'll also need to install the gpm package.
 
+
+%package -n	uclibc-%{libname}
+Summary:	Libraries and header files for developing mouse driven programs (uClibc build)
+Group:		System/Libraries
+
+%description -n	uclibc-%{libname}
+Library used by the gpm program.
+
 %package -n	%{devname}
 Summary:	Libraries and header files for developing mouse driven programs
 Group:		Development/C
 Requires:	%{libname} = %{version}
+%if %{with uclibc}
+Requires:	uclibc-%{libname} = %{version}
+%endif
 Provides:	libgpm-devel
 Obsoletes:	gpm-devel < %{version}-%{release}
 Provides:	gpm-devel = %{version}-%{release}
@@ -102,27 +124,46 @@ cp %{SOURCE2} inputattach.c
 
 ./autogen.sh
 
+%if %{with uclibc}
+mkdir .uclibc
+cp -a * .uclibc
+%endif
+
 %build
-CONFIGURE_TOP="$PWD"
-%configure2_5x	\
+export ac_cv_path_emacs=no
+
+%if %{with uclibc}
+pushd .uclibc
+CFLAGS="%{uclibc_cflags}" \
+%uclibc_configure \
+		--disable-static	
 %if !%{with ncurses}
 		--without-curses
 %endif
 
-make
-
-gcc %{optflags} %{ldflags} -o inputattach inputattach.c
-
-%if %{with uclibc}
-mkdir -p uclibc
-pushd uclibc
-%uclibc_configure
-%make -C src/ lib/libgpm.a 
+%make
+unset CFLAGS
 popd
 %endif
 
+%configure2_5x \
+%if !%{with ncurses}
+		--without-curses
+%endif
+
+%make
+
+gcc %{optflags} %{ldflags} -o inputattach inputattach.c
+
 %install
-%makeinstall
+%if %{with uclibc}
+%makeinstall_std -C .uclibc
+mkdir -p %{buildroot}%{uclibc_root}/%{_lib}
+mv %{buildroot}%{uclibc_root}%{_libdir}/libgpm.so.%{major}* %{buildroot}%{uclibc_root}/%{_lib}
+ln -srf %{buildroot}%{uclibc_root}/%{_lib}/libgpm.so.%{major}.* %{buildroot}%{uclibc_root}%{_libdir}/libgpm.so
+%endif
+
+%makeinstall_std
 
 install -m644 conf/gpm-root.conf -D %{buildroot}%{_sysconfdir}/gpm-root.conf
 install -m755 inputattach -D %{buildroot}%{_sbindir}/inputattach
@@ -133,13 +174,6 @@ ln -srf %{buildroot}/%{_lib}/libgpm.so.%{major}.*.* %{buildroot}%{_libdir}/libgp
 
 install -m755 %{SOURCE1} -D %{buildroot}%{_initrddir}/gpm
 install -m644 %{SOURCE3} -D %{buildroot}%{_unitdir}/gpm.service
-
-%if %{with uclibc}
-install -m644 uclibc/src/lib/libgpm.a -D %{buildroot}%{uclibc_root}%{_libdir}/libgpm.a
-%endif
-
-# cleanup
-rm -r %{buildroot}%{_datadir}/emacs/site-lisp
 
 %post
 %_post_service gpm
@@ -172,13 +206,31 @@ fi
 %{_mandir}/man7/gpm-types.7*
 %{_mandir}/man8/gpm.8*
 
+%if %{with uclibc}
+%files -n uclibc-%{name}
+%{uclibc_root}%{_bindir}/display-buttons
+%{uclibc_root}%{_bindir}/display-coords
+%{uclibc_root}%{_bindir}/mev
+%{uclibc_root}%{_bindir}/gpm-root
+%{uclibc_root}%{_bindir}/hltest
+%{uclibc_root}%{_bindir}/mouse-test
+%{uclibc_root}%{_bindir}/disable-paste
+%{uclibc_root}%{_bindir}/get-versions
+%{uclibc_root}%{_sbindir}/gpm
+%endif
+
 %files -n %{libname}
 /%{_lib}/libgpm.so.%{major}*
 
+%if %{with uclibc}
+%files -n uclibc-%{libname}
+%{uclibc_root}/%{_lib}/libgpm.so.%{major}*
+%endif
+
 %files -n %{devname}
 %{_libdir}/libgpm.a
+%{_libdir}/libgpm.so
 %if %{with uclibc}
-%{uclibc_root}%{_libdir}/libgpm.a
+%{uclibc_root}%{_libdir}/libgpm.so
 %endif
 %{_includedir}/gpm.h
-%{_libdir}/libgpm.so

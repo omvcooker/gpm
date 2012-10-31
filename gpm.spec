@@ -74,7 +74,6 @@ Library used by the gpm program.
 Install %{libname}dev if you need to develop text-mode programs which 
 will use the mouse. You'll also need to install the gpm package.
 
-
 %package -n	uclibc-%{libname}
 Summary:	Libraries and header files for developing mouse driven programs (uClibc build)
 Group:		System/Libraries
@@ -89,10 +88,7 @@ Requires:	%{libname} = %{version}
 %if %{with uclibc}
 Requires:	uclibc-%{libname} = %{version}
 %endif
-Obsoletes:	gpm-devel < %{version}-%{release}
 Provides:	gpm-devel = %{version}-%{release}
-Obsoletes:	%{mklibname %{name} 1 -d} < %{version}-%{release}
-Provides:	%{mklibname %{name} 1 -d} = %{version}-%{release}
 
 %description -n	%{devname}
 The %{devname} package contains the libraries and header files needed

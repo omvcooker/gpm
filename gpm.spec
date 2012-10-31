@@ -89,7 +89,6 @@ Requires:	%{libname} = %{version}
 %if %{with uclibc}
 Requires:	uclibc-%{libname} = %{version}
 %endif
-Provides:	libgpm-devel
 Obsoletes:	gpm-devel < %{version}-%{release}
 Provides:	gpm-devel = %{version}-%{release}
 Obsoletes:	%{mklibname %{name} 1 -d} < %{version}-%{release}

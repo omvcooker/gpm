@@ -9,11 +9,12 @@
 Summary:	A mouse server for the Linux console
 Name:		gpm
 Version:	1.20.7
-Release:	1
+Release:	2
 License:	GPLv2+
 Group:		System/Servers
 URL:		http://www.nico.schottelius.org/software/gpm/
 Source0:	http://www.nico.schottelius.org/software/gpm/archives/%{name}-%{version}.tar.lzma
+#(proyvind): please don't remove, still used by DrakX micro environment
 Source1:	gpm.init
 Source2:	inputattach.c
 Source3:	gpm.service

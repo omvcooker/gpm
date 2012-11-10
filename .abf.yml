@@ -1,0 +1,5 @@
+sources:
+  "gpm-1.20.7.tar.lzma:"	8d9f3655c80ce7667d31ede2a100b44986480369
+  "gpm.init:"	b4584a2f3db75132972964eee920a2299bb38ecc
+  "gpm.service:"	c7e4528fbfc32cd16b786d149ba7370c29374f66
+  "inputattach.c:"	f5934788e010dca896d576dbdf90399a766a05ba

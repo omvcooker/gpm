@@ -9,7 +9,7 @@
 Summary:	A mouse server for the Linux console
 Name:		gpm
 Version:	1.20.7
-Release:	2
+Release:	3
 License:	GPLv2+
 Group:		System/Servers
 URL:		http://www.nico.schottelius.org/software/gpm/
@@ -232,6 +232,9 @@ fi
 %{_includedir}/gpm.h
 
 %changelog
+* Wed Dec 12 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 1.20.7-3
+- rebuild on abf
+
 * Sat Nov 03 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 1.20.7-2
 + Revision: 821717
 - set a default mousetype in sysv init script

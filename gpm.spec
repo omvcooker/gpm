@@ -230,3 +230,63 @@ fi
 %{uclibc_root}%{_libdir}/libgpm.so
 %endif
 %{_includedir}/gpm.h
+
+%changelog
+* Sat Nov 03 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 1.20.7-2
++ Revision: 821717
+- set a default mousetype in sysv init script
+- allow to execute sysv init script with default configuration
+- update default mouse device in sysv initscript to /dev/input/mice
+
+* Wed Oct 31 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 1.20.7-1
++ Revision: 821442
+- drop ancient obsoletes
+- drop bogus libgpm-devel provides
+- do a full uclibc build
+- add dependency on texinfo
+- cleanups
+- update path for systemd service file to be installed
+- drop systemd scriptlets (they're now handled by triggers)
+- new version
+
+* Wed Sep 05 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 1.20.6-9
++ Revision: 816378
+- fix file permissions (also fixing stripping of library)
+- cosmetics
+- fix use of %%optflags & %%ldflags
+- cleanup a bit
+- drop missing header messing with dependencies rule (P55)
+- do uclibc build
+- drop rather useless %%serverbuild macro
+
+  + Andrey Bondrov <abondrov@mandriva.org>
+    - Drop some legacy junk
+
+* Thu Nov 10 2011 Zé <ze@mandriva.org> 1.20.6-7
++ Revision: 729606
+- no need to have requires to release
+- fix ncurses build
+- we safelly allow to use all cpus to build
+
+* Thu Nov 10 2011 Zé <ze@mandriva.org> 1.20.6-6
++ Revision: 729575
+- use %%with (avoid using without according with rpm polycies
+- add systemd support to enable mouse in cli since currently that is not possible
+- clean BR and defattr
+- remove clean section
+
+* Sun May 08 2011 Funda Wang <fwang@mandriva.org> 1.20.6-5
++ Revision: 672466
+- fix build
+
+  + Oden Eriksson <oeriksson@mandriva.com>
+    - mass rebuild
+
+* Thu Dec 02 2010 Oden Eriksson <oeriksson@mandriva.com> 1.20.6-4mdv2011.0
++ Revision: 605496
+- rebuild
+
+* Sun Mar 14 2010 Oden Eriksson <oeriksson@mandriva.com> 1.20.6-3mdv2010.1
++ Revision: 519006
+- rebuild
+

@@ -149,7 +149,7 @@ popd
 
 %make
 
-gcc %{optflags} %{ldflags} -o inputattach inputattach.c
+%{__cc} %{optflags} %{ldflags} -o inputattach inputattach.c
 
 %install
 %if %{with uclibc}

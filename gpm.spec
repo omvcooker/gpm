@@ -12,7 +12,7 @@ Version:	1.20.7
 Release:	3
 License:	GPLv2+
 Group:		System/Servers
-URL:		http://www.nico.schottelius.org/software/gpm/
+Url:		http://www.nico.schottelius.org/software/gpm/
 Source0:	http://www.nico.schottelius.org/software/gpm/archives/%{name}-%{version}.tar.lzma
 #(proyvind): please don't remove, still used by DrakX micro environment
 Source1:	gpm.init
@@ -33,16 +33,15 @@ Patch53:	gpm-1.20.5-format_not_a_string_literal_and_no_format_arguments.diff
 Patch54:	gpm-1.20.7-fix-out-of-source-build.patch
 
 BuildRequires:	byacc
+BuildRequires:	texinfo
 %if %{with ncurses}
 BuildRequires:	pkgconfig(ncursesw)
 %endif
 %if %{with uclibc}
 BuildRequires:	uClibc-devel >= 0.9.33.2-3
 %endif
-BuildRequires:	texinfo
-BuildRequires:	autoconf
-Requires(post):	chkconfig, rpm-helper
-Requires(preun):chkconfig, rpm-helper
+Requires(post,preun):	chkconfig
+Requires(post,preun):	rpm-helper
 
 %description
 Gpm provides mouse support to text-based Linux applications like the
@@ -89,7 +88,7 @@ Requires:	%{libname} = %{version}
 %if %{with uclibc}
 Requires:	uclibc-%{libname} = %{version}
 %endif
-Provides:	gpm-devel = %{version}-%{release}
+Provides:	%{name}-devel = %{version}-%{release}
 
 %description -n	%{devname}
 The %{devname} package contains the libraries and header files needed
@@ -132,9 +131,9 @@ export ac_cv_path_emacs=no
 pushd .uclibc
 CFLAGS="%{uclibc_cflags}" \
 %uclibc_configure \
-		--disable-static	
+	--disable-static	
 %if !%{with ncurses}
-		--without-curses
+	--without-curses
 %endif
 
 %make
@@ -144,7 +143,7 @@ popd
 
 %configure2_5x \
 %if !%{with ncurses}
-		--without-curses
+	--without-curses
 %endif
 
 %make
@@ -230,66 +229,4 @@ fi
 %{uclibc_root}%{_libdir}/libgpm.so
 %endif
 %{_includedir}/gpm.h
-
-%changelog
-* Wed Dec 12 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 1.20.7-3
-- rebuild on abf
-
-* Sat Nov 03 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 1.20.7-2
-+ Revision: 821717
-- set a default mousetype in sysv init script
-- allow to execute sysv init script with default configuration
-- update default mouse device in sysv initscript to /dev/input/mice
-
-* Wed Oct 31 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 1.20.7-1
-+ Revision: 821442
-- drop ancient obsoletes
-- drop bogus libgpm-devel provides
-- do a full uclibc build
-- add dependency on texinfo
-- cleanups
-- update path for systemd service file to be installed
-- drop systemd scriptlets (they're now handled by triggers)
-- new version
-
-* Wed Sep 05 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 1.20.6-9
-+ Revision: 816378
-- fix file permissions (also fixing stripping of library)
-- cosmetics
-- fix use of %%optflags & %%ldflags
-- cleanup a bit
-- drop missing header messing with dependencies rule (P55)
-- do uclibc build
-- drop rather useless %%serverbuild macro
-
-  + Andrey Bondrov <abondrov@mandriva.org>
-    - Drop some legacy junk
-
-* Thu Nov 10 2011 Zé <ze@mandriva.org> 1.20.6-7
-+ Revision: 729606
-- no need to have requires to release
-- fix ncurses build
-- we safelly allow to use all cpus to build
-
-* Thu Nov 10 2011 Zé <ze@mandriva.org> 1.20.6-6
-+ Revision: 729575
-- use %%with (avoid using without according with rpm polycies
-- add systemd support to enable mouse in cli since currently that is not possible
-- clean BR and defattr
-- remove clean section
-
-* Sun May 08 2011 Funda Wang <fwang@mandriva.org> 1.20.6-5
-+ Revision: 672466
-- fix build
-
-  + Oden Eriksson <oeriksson@mandriva.com>
-    - mass rebuild
-
-* Thu Dec 02 2010 Oden Eriksson <oeriksson@mandriva.com> 1.20.6-4mdv2011.0
-+ Revision: 605496
-- rebuild
-
-* Sun Mar 14 2010 Oden Eriksson <oeriksson@mandriva.com> 1.20.6-3mdv2010.1
-+ Revision: 519006
-- rebuild
 

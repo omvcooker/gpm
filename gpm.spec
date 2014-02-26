@@ -142,6 +142,7 @@ popd
 %endif
 
 %configure2_5x \
+	--enable-static \
 %if !%{with ncurses}
 	--without-curses
 %endif

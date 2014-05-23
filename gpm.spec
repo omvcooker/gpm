@@ -9,7 +9,7 @@
 Summary:	A mouse server for the Linux console
 Name:		gpm
 Version:	1.20.7
-Release:	11
+Release:	7
 License:	GPLv2+
 Group:		System/Servers
 Url:		http://www.nico.schottelius.org/software/gpm/
@@ -142,7 +142,6 @@ popd
 %endif
 
 %configure2_5x \
-	--enable-static \
 %if !%{with ncurses}
 	--without-curses
 %endif
@@ -233,41 +232,21 @@ fi
 
 
 %changelog
-* Wed Feb 26 2014 Alexander Khryukin <alexander@mezon.ru> 1.20.7-11
-+ Revision: 9e1f216
-- enable static
+* Wed Oct 23 2013 Bernhard Rosenkraenzer <bero@bero.eu> 1.20.7-7
++ Revision: 7221439
+- MassBuild#238: Increase release tag
 
-* Sat Dec 07 2013 Bernhard Rosenkraenzer <bero@bero.eu> 1.20.7-11
-+ Revision: 177f807
-- MassBuild#289: Increase release tag
+* Wed Oct 23 2013 Bernhard Rosenkraenzer <bero@bero.eu> 1.20.7-6
++ Revision: 3d93a88
+- MassBuild#238: Increase release tag
 
-* Sat Dec 07 2013 Bernhard Rosenkraenzer <bero@bero.eu> 1.20.7-10
-+ Revision: 9e9b162
-- MassBuild#289: Increase release tag
+* Wed Oct 16 2013 Bernhard Rosenkraenzer <bero@bero.eu> 1.20.7-5
++ Revision: 7d2d72b
+- MassBuild#233: Increase release tag
 
-* Sat Dec 07 2013 Bernhard Rosenkraenzer <bero@bero.eu> 1.20.7-9
-+ Revision: 8a8eed9
-- MassBuild#289: Increase release tag
-
-* Sat Dec 07 2013 Bernhard Rosenkraenzer <bero@bero.eu> 1.20.7-8
-+ Revision: e1a7d74
-- MassBuild#289: Increase release tag
-
-* Wed Oct 16 2013 Tomasz Paweł Gajc <phenomenal@wp.pl> 1.20.7-7
-+ Revision: 907b3fc
-- MassBuild#232: Increase release tag
-
-* Wed Oct 16 2013 Tomasz Paweł Gajc <phenomenal@wp.pl> 1.20.7-6
-+ Revision: f1a70c9
-- MassBuild#232: Increase release tag
-
-* Wed Oct 16 2013 Tomasz Paweł Gajc <phenomenal@wp.pl> 1.20.7-5
-+ Revision: cc68519
-- MassBuild#232: Increase release tag
-
-* Wed Oct 16 2013 Tomasz Paweł Gajc <phenomenal@wp.pl> 1.20.7-4
-+ Revision: 1133992
-- MassBuild#232: Increase release tag
+* Wed Oct 16 2013 Bernhard Rosenkraenzer <bero@bero.eu> 1.20.7-4
++ Revision: a50e3f2
+- MassBuild#233: Increase release tag
 
 * Fri May 03 2013 mdawkins (Matthew Dawkins) <mattydaw@gmail.com> 1.20.7-3
 + Revision: 94906ea
@@ -277,15 +256,15 @@ fi
 + Revision: 995874e
 - do not use gcc instead of %{__cc} macro
 
-* Wed Dec 12 2012 proyvind (Per Øyvind Karlsen) <peroyvind@mandriva.org> 1.20.7-3
+* Thu Dec 13 2012 proyvind (Per Øyvind Karlsen) <peroyvind@mandriva.org> 1.20.7-3
 + Revision: caa7d6e
 - bump release
 
-* Wed Dec 12 2012 proyvind (Per Øyvind Karlsen) <peroyvind@mandriva.org> 1.20.7-2
+* Thu Dec 13 2012 proyvind (Per Øyvind Karlsen) <peroyvind@mandriva.org> 1.20.7-2
 + Revision: 4b1ab1b
 - fixup after merge
 
-* Fri Nov 02 2012 peroyvind <peroyvind@mandriva.org> 1.20.7-2
+* Sat Nov 03 2012 peroyvind <peroyvind@mandriva.org> 1.20.7-2
 + Revision: 8a8711d
 - update default mouse device in sysv initscript to /dev/input/mice
 - SILENT: svn-revision: 821713
@@ -340,19 +319,49 @@ fi
 - cosmetics
 - SILENT: svn-revision: 816377
 
-* Tue Sep 04 2012 peroyvind <peroyvind@mandriva.org> 1.20.6-9
+* Wed Sep 05 2012 peroyvind <peroyvind@mandriva.org> 1.20.6-9
 + Revision: 2312690
 - fix use of %optflags & %ldflags
 - SILENT: svn-revision: 816376
 
-* Tue Sep 04 2012 peroyvind <peroyvind@mandriva.org> 1.20.6-9
+* Wed Sep 05 2012 peroyvind <peroyvind@mandriva.org> 1.20.6-9
 + Revision: 090de59
 - cleanup a bit
 - SILENT: svn-revision: 816368
 
-* Tue Sep 04 2012 peroyvind <peroyvind@mandriva.org> 1.20.6-9
+* Wed Sep 05 2012 peroyvind <peroyvind@mandriva.org> 1.20.6-9
 + Revision: 602f254
 - drop missing header messing with dependencies rule (P55)
 - SILENT: svn-revision: 816367
+
+* Wed Sep 05 2012 peroyvind <peroyvind@mandriva.org> 1.20.6-9
++ Revision: dc06f78
+- do uclibc build
+- SILENT: svn-revision: 816362
+
+* Wed Sep 05 2012 peroyvind <peroyvind@mandriva.org> 1.20.6-8
++ Revision: 6632585
+- drop rather useless %serverbuild macro
+- SILENT: svn-revision: 816351
+
+* Wed Jun 13 2012 abondrov <abondrov@mandriva.org> 1.20.6-8
++ Revision: 4aa22de
+- Drop some legacy junk
+- SILENT: svn-revision: 805357
+
+* Thu Nov 10 2011 mmodem <mmodem@mandriva.org> 1.20.6-7
++ Revision: a5693fe
+- - no need to have requires to release
+- - fix ncurses build
+- - we safelly allow to use all cpus to build
+- SILENT: svn-revision: 729606
+
+* Thu Nov 10 2011 mmodem <mmodem@mandriva.org> 1.20.6-6
++ Revision: 773ad4e
+- - use %%with (avoid using without according with rpm polycies
+- - add systemd support to enable mouse in cli since currently that is not possible
+- - clean BR and defattr
+- - remove clean section
+- SILENT: svn-revision: 729575
 
 

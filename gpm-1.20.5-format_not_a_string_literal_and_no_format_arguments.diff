@@ -1,0 +1,11 @@
+--- ./src/lib/report-lib.c	2008-12-20 20:49:24.000000000 +0100
++++ ./src/lib/report-lib.c.oden	2008-12-20 20:49:17.000000000 +0100
+@@ -57,7 +57,7 @@ void gpm_report(int line, char *file, in
+                            log_level = LOG_CRIT; break;
+    }
+ #ifdef HAVE_VSYSLOG
+-   syslog(log_level, string);
++   syslog(log_level, "%s", string);
+    vsyslog(log_level, text, ap);
+ #else
+    fprintf(stderr,"%s[%s(%d)]:\n",string,file,line);

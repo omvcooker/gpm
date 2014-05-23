@@ -7,6 +7,7 @@
 %define	devname	%mklibname %{name} -d
 
 Summary:	A mouse server for the Linux console
+
 Name:		gpm
 Version:	1.20.7
 Release:	11
@@ -55,6 +56,7 @@ MandrivaLinux system.
 
 %package -n	uclibc-%{name}
 Summary:	A mouse server for the Linux console (uClibc build)
+
 Group:		System/Servers
 
 %description -n	uclibc-%{name}
@@ -66,6 +68,7 @@ the click of a mouse button.
 
 %package -n	%{libname}
 Summary:	Libraries and header files for developing mouse driven programs
+
 Group:		System/Libraries
 
 %description -n	%{libname}
@@ -76,6 +79,7 @@ will use the mouse. You'll also need to install the gpm package.
 
 %package -n	uclibc-%{libname}
 Summary:	Libraries and header files for developing mouse driven programs (uClibc build)
+
 Group:		System/Libraries
 
 %description -n	uclibc-%{libname}
@@ -83,6 +87,7 @@ Library used by the gpm program.
 
 %package -n	%{devname}
 Summary:	Libraries and header files for developing mouse driven programs
+
 Group:		Development/C
 Requires:	%{libname} = %{version}
 %if %{with uclibc}
@@ -230,129 +235,5 @@ fi
 %{uclibc_root}%{_libdir}/libgpm.so
 %endif
 %{_includedir}/gpm.h
-
-
-%changelog
-* Wed Feb 26 2014 Alexander Khryukin <alexander@mezon.ru> 1.20.7-11
-+ Revision: 9e1f216
-- enable static
-
-* Sat Dec 07 2013 Bernhard Rosenkraenzer <bero@bero.eu> 1.20.7-11
-+ Revision: 177f807
-- MassBuild#289: Increase release tag
-
-* Sat Dec 07 2013 Bernhard Rosenkraenzer <bero@bero.eu> 1.20.7-10
-+ Revision: 9e9b162
-- MassBuild#289: Increase release tag
-
-* Sat Dec 07 2013 Bernhard Rosenkraenzer <bero@bero.eu> 1.20.7-9
-+ Revision: 8a8eed9
-- MassBuild#289: Increase release tag
-
-* Sat Dec 07 2013 Bernhard Rosenkraenzer <bero@bero.eu> 1.20.7-8
-+ Revision: e1a7d74
-- MassBuild#289: Increase release tag
-
-* Wed Oct 16 2013 Tomasz Paweł Gajc <phenomenal@wp.pl> 1.20.7-7
-+ Revision: 907b3fc
-- MassBuild#232: Increase release tag
-
-* Wed Oct 16 2013 Tomasz Paweł Gajc <phenomenal@wp.pl> 1.20.7-6
-+ Revision: f1a70c9
-- MassBuild#232: Increase release tag
-
-* Wed Oct 16 2013 Tomasz Paweł Gajc <phenomenal@wp.pl> 1.20.7-5
-+ Revision: cc68519
-- MassBuild#232: Increase release tag
-
-* Wed Oct 16 2013 Tomasz Paweł Gajc <phenomenal@wp.pl> 1.20.7-4
-+ Revision: 1133992
-- MassBuild#232: Increase release tag
-
-* Fri May 03 2013 mdawkins (Matthew Dawkins) <mattydaw@gmail.com> 1.20.7-3
-+ Revision: 94906ea
-- cleaned up spec
-
-* Wed Apr 03 2013 Alexander Khryukin <alexander@mezon.ru> 1.20.7-3
-+ Revision: 995874e
-- do not use gcc instead of %{__cc} macro
-
-* Wed Dec 12 2012 proyvind (Per Øyvind Karlsen) <peroyvind@mandriva.org> 1.20.7-3
-+ Revision: caa7d6e
-- bump release
-
-* Wed Dec 12 2012 proyvind (Per Øyvind Karlsen) <peroyvind@mandriva.org> 1.20.7-2
-+ Revision: 4b1ab1b
-- fixup after merge
-
-* Fri Nov 02 2012 peroyvind <peroyvind@mandriva.org> 1.20.7-2
-+ Revision: 8a8711d
-- update default mouse device in sysv initscript to /dev/input/mice
-- SILENT: svn-revision: 821713
-
-* Wed Oct 31 2012 peroyvind <peroyvind@mandriva.org> 1.20.7-1
-+ Revision: 21352eb
-- drop ancient obsoletes
-- SILENT: svn-revision: 821442
-
-* Wed Oct 31 2012 peroyvind <peroyvind@mandriva.org> 1.20.7-1
-+ Revision: cca337f
-- drop bogus libgpm-devel provides
-- SILENT: svn-revision: 821438
-
-* Wed Oct 31 2012 peroyvind <peroyvind@mandriva.org> 1.20.7-1
-+ Revision: 43a6b05
-- do a full uclibc build
-- SILENT: svn-revision: 821436
-
-* Tue Oct 30 2012 peroyvind <peroyvind@mandriva.org> 1.20.7-1
-+ Revision: 38ce0ab
-- add dependency on texinfo
-- SILENT: svn-revision: 820737
-
-* Tue Oct 30 2012 peroyvind <peroyvind@mandriva.org> 1.20.7-1
-+ Revision: fb19085
-- cleanups
-- SILENT: svn-revision: 820704
-
-* Tue Oct 30 2012 peroyvind <peroyvind@mandriva.org> 1.20.7-1
-+ Revision: 92c1ef6
-- update path for systemd service file to be installed
-- SILENT: svn-revision: 820693
-
-* Tue Oct 30 2012 peroyvind <peroyvind@mandriva.org> 1.20.7-1
-+ Revision: 8dc136c
-- drop systemd scriptlets (they're now handled by triggers)
-- SILENT: svn-revision: 820692
-
-* Tue Oct 30 2012 peroyvind <peroyvind@mandriva.org> 1.20.7-1
-+ Revision: 33b1ac7
-- new version
-- SILENT: svn-revision: 820691
-
-* Wed Sep 05 2012 peroyvind <peroyvind@mandriva.org> 1.20.6-9
-+ Revision: 9816d0d
-- fix file permissions (also fixing stripping of library)
-- SILENT: svn-revision: 816378
-
-* Wed Sep 05 2012 peroyvind <peroyvind@mandriva.org> 1.20.6-9
-+ Revision: 5778a44
-- cosmetics
-- SILENT: svn-revision: 816377
-
-* Tue Sep 04 2012 peroyvind <peroyvind@mandriva.org> 1.20.6-9
-+ Revision: 2312690
-- fix use of %optflags & %ldflags
-- SILENT: svn-revision: 816376
-
-* Tue Sep 04 2012 peroyvind <peroyvind@mandriva.org> 1.20.6-9
-+ Revision: 090de59
-- cleanup a bit
-- SILENT: svn-revision: 816368
-
-* Tue Sep 04 2012 peroyvind <peroyvind@mandriva.org> 1.20.6-9
-+ Revision: 602f254
-- drop missing header messing with dependencies rule (P55)
-- SILENT: svn-revision: 816367
 
 

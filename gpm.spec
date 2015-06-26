@@ -83,12 +83,14 @@ Provides:	uclibc-%{name}-devel = %{EVRD}
 Conflicts:	%{devname} < 1.20.7-15
 
 %description -n	uclibc-%{devname}
-The uclibc-%{devname} package contains the libraries and header files needed
-for development of mouse driven programs.  This package allows you to
-develop text-mode programs which use the mouse.
+The uclibc-%{devname} package contains the libraries and header 
+files needed for development of mouse driven programs.
+This package allows you to develop text-mode programs which 
+use the mouse.
 
-Install uclibc-%{devname} if you need to develop text-mode programs which
-will use the mouse. You'll also need to install the gpm package.
+Install uclibc-%{devname} if you need to develop text-mode
+programs which will use the mouse.
+You'll also need to install the gpm package.
 %endif
 
 %package -n	%{libname}

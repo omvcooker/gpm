@@ -10,7 +10,7 @@ Summary:	A mouse server for the Linux console
 
 Name:		gpm
 Version:	1.20.7
-Release:	14
+Release:	15
 License:	GPLv2+
 Group:		System/Servers
 Url:		http://www.nico.schottelius.org/software/gpm/
@@ -40,6 +40,7 @@ BuildRequires:	pkgconfig(ncursesw)
 %endif
 %if %{with uclibc}
 BuildRequires:	uClibc-devel >= 0.9.33.2-3
+BuildRequires:	uclibc-ncurses-devel
 %endif
 Requires(post,preun):	chkconfig
 Requires(post,preun):	rpm-helper
@@ -52,11 +53,11 @@ the mouse and includes a program to allow pop-up menus to appear at
 the click of a mouse button.
 
 Gpm should be installed if you intend to use a mouse with your
-MandrivaLinux system.
+OpenMandriva Lx system.
 
+%if %{with uclibc}
 %package -n	uclibc-%{name}
 Summary:	A mouse server for the Linux console (uClibc build)
-
 Group:		System/Servers
 
 %description -n	uclibc-%{name}
@@ -66,9 +67,32 @@ programs.  Gpm also provides console cut-and-paste operations using
 the mouse and includes a program to allow pop-up menus to appear at
 the click of a mouse button.
 
+%package -n	uclibc-%{libname}
+Summary:	Libraries and header files for developing mouse driven programs (uClibc build)
+Group:		System/Libraries
+
+%description -n	uclibc-%{libname}
+Library used by the gpm program.
+
+%package -n	uclibc-%{devname}
+Summary:	Libraries and header files for developing mouse driven programs
+Group:		Development/C
+Requires:	%{devname} = %{EVRD}
+Requires:	uclibc-%{libname} = %{EVRD}
+Provides:	uclibc-%{name}-devel = %{EVRD}
+Conflicts:	%{devname} < 1.20.7-15
+
+%description -n	uclibc-%{devname}
+The uclibc-%{devname} package contains the libraries and header files needed
+for development of mouse driven programs.  This package allows you to
+develop text-mode programs which use the mouse.
+
+Install uclibc-%{devname} if you need to develop text-mode programs which
+will use the mouse. You'll also need to install the gpm package.
+%endif
+
 %package -n	%{libname}
 Summary:	Libraries and header files for developing mouse driven programs
-
 Group:		System/Libraries
 
 %description -n	%{libname}
@@ -77,22 +101,10 @@ Library used by the gpm program.
 Install %{libname}dev if you need to develop text-mode programs which 
 will use the mouse. You'll also need to install the gpm package.
 
-%package -n	uclibc-%{libname}
-Summary:	Libraries and header files for developing mouse driven programs (uClibc build)
-
-Group:		System/Libraries
-
-%description -n	uclibc-%{libname}
-Library used by the gpm program.
-
 %package -n	%{devname}
 Summary:	Libraries and header files for developing mouse driven programs
-
 Group:		Development/C
 Requires:	%{libname} = %{version}
-%if %{with uclibc}
-Requires:	uclibc-%{libname} = %{version}
-%endif
 Provides:	%{name}-devel = %{version}-%{release}
 
 %description -n	%{devname}
@@ -146,7 +158,7 @@ unset CFLAGS
 popd
 %endif
 
-%configure2_5x \
+%configure \
 	--enable-static \
 %if !%{with ncurses}
 	--without-curses
@@ -226,14 +238,14 @@ fi
 %if %{with uclibc}
 %files -n uclibc-%{libname}
 %{uclibc_root}/%{_lib}/libgpm.so.%{major}*
+
+%files -n uclibc-%{devname}
+%{uclibc_root}%{_libdir}/libgpm.so
 %endif
 
 %files -n %{devname}
 %{_libdir}/libgpm.a
 %{_libdir}/libgpm.so
-%if %{with uclibc}
-%{uclibc_root}%{_libdir}/libgpm.so
-%endif
 %{_includedir}/gpm.h
 
 

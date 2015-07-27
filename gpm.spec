@@ -9,8 +9,8 @@
 Summary:	A mouse server for the Linux console
 
 Name:		gpm
-Version:	1.20.7
-Release:	17
+Version:	1.99.7
+Release:	1
 License:	GPLv2+
 Group:		System/Servers
 Url:		http://www.nico.schottelius.org/software/gpm/
@@ -31,7 +31,10 @@ Patch52:	gpm-1.20.7-do_not_build_it_twice.diff
 Patch53:	gpm-1.20.5-format_not_a_string_literal_and_no_format_arguments.diff
 # these automake files are utter crap, so just let's rip out the stuff that really doesn't belong
 # there, we don't use and that's causing problem..
-Patch54:	gpm-1.20.7-fix-out-of-source-build.patch
+#Patch54:	gpm-1.20.7-fix-out-of-source-build.patch
+Patch55:	gpm-1.99.7-uclibc.patch
+Patch56:	gpm-1.99.7-fix-warnings.patch
+Patch57:	gpm-1.99.7-compile.patch
 
 BuildRequires:	byacc
 BuildRequires:	texinfo
@@ -120,27 +123,22 @@ will use the mouse. You'll also need to install the gpm package.
 %prep
 %setup -q
 find -name \*.c |xargs chmod 644
+# The code is nowhere near compiling with -Werror with clang 3.7
+sed -i -e 's,-Werror ,,' Makefile.*
     
-# fedora patches
-%patch1 -p1 -b .multilib~
-%patch2 -p1 -b .lib-silent́~
-%patch4 -p1 -b .close-fd~
-%patch5 -p1 -b .weak-wgetch~
-
-# mdv patches
-%patch50 -p1 -b .nodebug~
-%patch51 -p1 -b .docfix~
-%patch52 -p1 -b .do_not_build_it_twice~
-%patch53 -p0 -b .format_not_a_string_literal_and_no_format_arguments~
-%patch54 -p1 -b .out_of_source~
+%apply_patches
 
 cp %{SOURCE2} inputattach.c
 
+sed -i -e 's,git-describe,echo %{version},g' autogen.sh
+echo %{version} >.gitversion
+sed -i -e 's,.git/HEAD,,g' Makefile.in
 ./autogen.sh
 
 %if %{with uclibc}
 mkdir .uclibc
-cp -a * .uclibc
+cp -a * .gitversion.m4 .uclibc
+find .uclibc -name ".*~" |xargs rm -rf
 %endif
 
 %build
@@ -148,9 +146,9 @@ export ac_cv_path_emacs=no
 
 %if %{with uclibc}
 pushd .uclibc
-CFLAGS="%{uclibc_cflags}" \
+%define uclibc_cflags %{optflags} -fno-strict-aliasing
 %uclibc_configure \
-	--disable-static	
+	--disable-static \
 %if !%{with ncurses}
 	--without-curses
 %endif
@@ -160,6 +158,12 @@ unset CFLAGS
 popd
 %endif
 
+# Heavy use of nested functions
+CFLAGS="%{optflags} -fno-strict-aliasing" \
+%if ! %{cross_compiling}
+CC=gcc \
+CXX=g++ \
+%endif
 %configure \
 	--enable-static \
 %if !%{with ncurses}
@@ -172,15 +176,15 @@ popd
 
 %install
 %if %{with uclibc}
-%makeinstall_std -C .uclibc
+%makeinstall_std -C .uclibc MKDIR="mkdir -p"
 mkdir -p %{buildroot}%{uclibc_root}/%{_lib}
 mv %{buildroot}%{uclibc_root}%{_libdir}/libgpm.so.%{major}* %{buildroot}%{uclibc_root}/%{_lib}
 ln -srf %{buildroot}%{uclibc_root}/%{_lib}/libgpm.so.%{major}.* %{buildroot}%{uclibc_root}%{_libdir}/libgpm.so
 %endif
 
-%makeinstall_std
+%makeinstall_std MKDIR="mkdir -p"
 
-install -m644 conf/gpm-root.conf -D %{buildroot}%{_sysconfdir}/gpm-root.conf
+install -m644 example-configurations/gpm-root.conf -D %{buildroot}%{_sysconfdir}/gpm-root.conf
 install -m755 inputattach -D %{buildroot}%{_sbindir}/inputattach
 
 mkdir -p %{buildroot}/%{_lib}
@@ -189,6 +193,8 @@ ln -srf %{buildroot}/%{_lib}/libgpm.so.%{major}.*.* %{buildroot}%{_libdir}/libgp
 
 install -m755 %{SOURCE1} -D %{buildroot}%{_initrddir}/gpm
 install -m644 %{SOURCE3} -D %{buildroot}%{_unitdir}/gpm.service
+
+rm -f %{buildroot}%{uclibc_root}%{_libdir}/*.a
 
 %post
 %_post_service gpm
@@ -249,5 +255,3 @@ fi
 %{_libdir}/libgpm.a
 %{_libdir}/libgpm.so
 %{_includedir}/gpm.h
-
-

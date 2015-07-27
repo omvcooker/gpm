@@ -1,28 +1,6 @@
---- gpm-1.20.1/doc/Makefile.in.multilib	2002-12-24 17:57:16.000000000 -0500
-+++ gpm-1.20.1/doc/Makefile.in	2004-10-20 17:25:11.000000000 -0400
-@@ -97,7 +97,7 @@
- 
- # Main portion
- 
--all: $(srcdir)/gpm.info $(MANPAGES)
-+all: gpm.info $(MANPAGES)
- 
- # why gpmdoc.ps and gpm.ps??
- # there is no gpm.ps in my tree and no rule to generate gpm.ps.
-@@ -131,8 +131,8 @@
- 	#i keep all my infopages compressed and i'm tired to do it by
- 	#hand, so check if there are any compressed pages and do this
- 	#one too
--	-ls $(infodir)/*[-.]info.gz >/dev/null 2>&1 \
--		&& gzip -f $(infodir)/gpm.info
-+	#-ls $(infodir)/*[-.]info.gz >/dev/null 2>&1 \
-+	#	&& gzip -f $(infodir)/gpm.info
- 	# Hmm.... shouldn't man pages be compressed too?
-    # maybe they should, but at least at my system they are not.
- 
---- gpm-1.20.1/contrib/Makefile.in.multilib	2002-12-24 17:57:16.000000000 -0500
-+++ gpm-1.20.1/contrib/Makefile.in	2004-10-20 17:11:38.000000000 -0400
-@@ -9,10 +9,10 @@
+--- gpm-1.99.7/contrib/Makefile.in.multilib~	2008-06-19 07:48:48.000000000 +0200
++++ gpm-1.99.7/contrib/Makefile.in	2015-07-27 22:44:48.010183049 +0200
+@@ -9,10 +9,10 @@ top_builddir = ..
  
  include $(top_builddir)/Makefile.include
  
@@ -35,7 +13,7 @@
  		$(INSTALL_DATA) $(srcdir)/$$i $(lispdir)/`basename $$i` ;\
  	done; fi
  
-@@ -20,7 +20,7 @@
+@@ -20,7 +20,7 @@ install: all
  	$(EMACS) -batch -l $(srcdir)/emacs/exec.el -exec '(byte-compile-file "$<")'
  
  uninstall:
@@ -44,9 +22,22 @@
  		rm -f $(lispdir)/$$i ;\
  	done; fi 
  
-@@ -28,4 +28,4 @@
+@@ -28,4 +28,4 @@ dist:
  	$(CP) -r $(srcdir) $(top_builddir)/gpm-$(release)/
  
  clean distclean:
 -	$(RM) -f $(srcdir)/emacs/*.elc Makefile
 +	$(RM) $(srcdir)/emacs/*.elc Makefile
+--- gpm-1.99.7/doc/Makefile.in.multilib~	2008-07-24 12:32:54.000000000 +0200
++++ gpm-1.99.7/doc/Makefile.in	2015-07-27 22:44:48.010183049 +0200
+@@ -128,8 +128,8 @@ install:	all installdirs
+ 	#i keep all my infopages compressed and i'm tired to do it by
+ 	#hand, so check if there are any compressed pages and do this
+ 	#one too
+-	-ls $(infodir)/*[-.]info.gz >/dev/null 2>&1 \
+-		&& gzip -f $(infodir)/gpm.info
++	#-ls $(infodir)/*[-.]info.gz >/dev/null 2>&1 \
++	#	&& gzip -f $(infodir)/gpm.info
+ 	# Hmm.... shouldn't man pages be compressed too?
+    # maybe they should, but at least at my system they are not.
+ 

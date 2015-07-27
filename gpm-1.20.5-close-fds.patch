@@ -1,14 +1,14 @@
---- gpm-1.20.5/src/daemon/startup.c.close-fds	2008-07-17 11:39:55.000000000 +0200
-+++ gpm-1.20.5/src/daemon/startup.c	2008-07-17 11:40:20.000000000 +0200
-@@ -135,6 +135,11 @@ void startup(int argc, char **argv)
+--- gpm-1.99.7/src/daemon/startup.c.0004~	2015-07-27 22:48:45.518239419 +0200
++++ gpm-1.99.7/src/daemon/startup.c	2015-07-27 22:49:49.172254527 +0200
+@@ -190,6 +190,11 @@ void startup(int argc, char **argv)
     check_uniqueness();
-    gpm_report(GPM_PR_INFO,GPM_MESS_STARTED);
+    gpm_report(GPM_PR_INFO, GPM_MESS_STARTED);
  
 +   // close extra fds
 +   close(0);
 +   close(1);
 +   close(2);
 +
-    //return mouse_table[1].fd; /* the second is handled in the main() */
+    // return mouse_table[1].fd; /* the second is handled in the main() */
  
     /****************** OLD CODE from gpn.c  END ***********************/

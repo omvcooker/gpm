@@ -1,5 +1,5 @@
 %bcond_without	ncurses
-%bcond_without	uclibc
+%bcond_with	uclibc
 
 # this defines the library version that this package builds.
 %define	major	2
@@ -10,7 +10,7 @@ Summary:	A mouse server for the Linux console
 
 Name:		gpm
 Version:	1.99.7
-Release:	1
+Release:	2
 License:	GPLv2+
 Group:		System/Servers
 Url:		http://www.nico.schottelius.org/software/gpm/

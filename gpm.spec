@@ -92,11 +92,10 @@ sed -i -e 's,.git/HEAD,,g' Makefile.in
 export ac_cv_path_emacs=no
 
 # Heavy use of nested functions
+export CC=gcc
+export CXX=g++
+
 CFLAGS="%{optflags} -fno-strict-aliasing" \
-%if ! %{cross_compiling}
-CC=gcc \
-CXX=g++ \
-%endif
 %configure \
 	--enable-static \
 %if !%{with ncurses}

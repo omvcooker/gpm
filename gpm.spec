@@ -8,7 +8,7 @@
 Summary:	A mouse server for the Linux console
 Name:		gpm
 Version:	1.99.7
-Release:	3
+Release:	4
 License:	GPLv2+
 Group:		System/Servers
 Url:		http://www.nico.schottelius.org/software/gpm/

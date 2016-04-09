@@ -20,7 +20,7 @@ Patch1:		gpm-1.20.1-multilib.patch
 Patch2:		gpm-1.20.1-lib-silent.patch
 Patch4:		gpm-1.20.5-close-fds.patch
 Patch5:		gpm-1.20.7-weak-wgetch.patch
-Patch6:		gpm-1.20.6-missing-header-dir-in-make-depend.patch
+#Patch6:		gpm-1.20.6-missing-header-dir-in-make-depend.patch
 # mdv patches
 Patch50:	gpm-1.20.5-nodebug.patch
 Patch51:	gpm-1.20.0-docfix.patch
@@ -31,6 +31,8 @@ Patch53:	gpm-1.20.5-format_not_a_string_literal_and_no_format_arguments.diff
 #Patch54:	gpm-1.20.7-fix-out-of-source-build.patch
 Patch56:	gpm-1.99.7-fix-warnings.patch
 Patch57:	gpm-1.99.7-compile.patch
+# from debian
+Patch58:	070_struct_ucred.diff
 
 BuildRequires:	byacc
 BuildRequires:	texinfo

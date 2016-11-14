@@ -7,17 +7,16 @@
 %define gitrev	g1fd1941
 # do NOT upgrade to 1.99.7 as it's development releases not maintained
 # since 2010..
-%define	ver	1.20.7
 
 Summary:	A mouse server for the Linux console
 Name:		gpm
-Version:	%{ver}~%{gitrev}
+Version:	1.20.7
 Epoch:		1
-Release:	1
+Release:	1.%{gitrev}.1
 License:	GPLv2+
 Group:		System/Servers
 Url:		http://www.nico.schottelius.org/software/gpm/
-Source0:	http://www.nico.schottelius.org/software/gpm/archives/%{name}-%{ver}-27-%{gitrev}.tar.xz
+Source0:	http://www.nico.schottelius.org/software/gpm/archives/%{name}-%{version}-27-%{gitrev}.tar.xz
 Source2:	inputattach.c
 Source3:	gpm.service
 # fedora patches (gpm-1.20.5-1.fc10.src.rpm)
@@ -72,7 +71,7 @@ Install %{devname} if you need to develop text-mode programs which
 will use the mouse. You'll also need to install the gpm package.
 
 %prep
-%setup -q -n %{name}-%{ver}-27-%{gitrev}
+%setup -q -n %{name}-%{version}-27-%{gitrev}
 %apply_patches
 
 cp %{SOURCE2} inputattach.c

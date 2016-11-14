@@ -25,14 +25,9 @@ Patch1:		gpm-1.20.1-multilib.patch
 Patch2:		gpm-1.20.7-27-g1fd1941-lib-silent.patch
 Patch4:		gpm-1.20.7-27-g1fd1941-close-fds.patch
 Patch5:		gpm-1.20.7-27-g1fd1941-weak-wgetch.patch
-#Patch6:		gpm-1.20.6-missing-header-dir-in-make-depend.patch
 # mdv patches
 Patch51:	gpm-1.20.0-docfix.patch
 Patch52:	gpm-1.20.7-27-g1fd1941-do_not_build_it_twice.diff
-# these automake files are utter crap, so just let's rip out the stuff that really doesn't belong
-# there, we don't use and that's causing problem..
-#Patch54:	gpm-1.20.7-fix-out-of-source-build.patch
-#Patch57:	gpm-1.99.7-compile.patch
 # from debian
 Patch58:	070_struct_ucred.diff
 
@@ -41,8 +36,6 @@ BuildRequires:	texinfo
 %if %{with ncurses}
 BuildRequires:	pkgconfig(ncursesw)
 %endif
-Requires(post,preun):	chkconfig
-Requires(post,preun):	rpm-helper
 
 %description
 Gpm provides mouse support to text-based Linux applications like the
@@ -87,8 +80,6 @@ cp %{SOURCE2} inputattach.c
 ./autogen.sh
 
 %build
-export ac_cv_path_emacs=no
-
 # Heavy use of nested functions
 export CC=gcc
 export CXX=g++

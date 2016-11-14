@@ -93,7 +93,6 @@ export ac_cv_path_emacs=no
 export CC=gcc
 export CXX=g++
 
-CFLAGS="%{optflags} -fno-strict-aliasing" \
 %configure \
 	--enable-static \
 %if !%{with ncurses}

@@ -80,10 +80,6 @@ cp %{SOURCE2} inputattach.c
 ./autogen.sh
 
 %build
-# Heavy use of nested functions
-export CC=gcc
-export CXX=g++
-
 %configure \
 	--enable-static \
 %if !%{with ncurses}

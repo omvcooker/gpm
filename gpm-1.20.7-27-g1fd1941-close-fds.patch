@@ -1,0 +1,14 @@
+--- gpm-1.20.7-27-g1fd1941/src/daemon/startup.c.0004~	2016-11-14 16:56:29.020175053 +0100
++++ gpm-1.20.7-27-g1fd1941/src/daemon/startup.c	2016-11-14 17:05:35.474289103 +0100
+@@ -52,6 +52,11 @@ void startup(int argc, char **argv)
+    
+    /* log to debug, who we are */
+    gpm_report(GPM_PR_DEBUG, GPM_MESS_VERSION);
++
++   // close extra fds
++   close(0);
++   close(1);
++   close(2);
+ 
+    /* basic settings */
+    option.run_status    = GPM_RUN_STARTUP;      /* 10,9,8,... let's go */

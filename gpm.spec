@@ -14,7 +14,7 @@ Release:	1
 License:	GPLv2+
 Group:		System/Servers
 Url:		http://www.nico.schottelius.org/software/gpm/
-Source0:	http://www.nico.schottelius.org/software/gpm/archives/%{name}-%{version}.tar.xz
+Source0:	https://github.com/proyvind/gpm/archive/%{version}.tar.gz
 #(proyvind): please don't remove, still used by ucDrakX micro environment
 Source1:	gpm.init
 Source2:	inputattach.c

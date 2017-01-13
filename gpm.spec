@@ -103,8 +103,8 @@ will use the mouse. You'll also need to install the gpm package.
 %package -n	%{devname}
 Summary:	Libraries and header files for developing mouse driven programs
 Group:		Development/C
-Requires:	%{libname} = %{version}
-Provides:	%{name}-devel = %{version}-%{release}
+Requires:	%{libname} = %{EVRD}
+Provides:	%{name}-devel = %{EVRD}
 
 %description -n	%{devname}
 The %{devname} package contains the libraries and header files needed
